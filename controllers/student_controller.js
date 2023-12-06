@@ -5,8 +5,10 @@ const getAllStudents = async (req, res) => {
     try{
         let students = ""
         if (req.query.name){
-            const students = await Student.find({name: req.query.name});
+            console.log("getStudentByName");
+            students = await Student.find({name: req.query.name});
         } else {
+            console.log("getallstudents");
            students = await Student.find();
         }
         res.send(students);
