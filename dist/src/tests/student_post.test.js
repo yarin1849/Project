@@ -62,8 +62,8 @@ describe("Student post tests", () => {
     //   expect(response.body.name).toBe(updatedStudent.name);
     // });
     // test("Test DELETE /student/:id", async () => {
-    //   const response = await request(app).delete(`/student/${student._id}`);
-    //   expect(response.statusCode).toBe(200);
+    // const response = await request(app).delete(`/student/${student._id}`);
+    // expect(response.statusCode).toBe(200);
     // });
 });
 //# sourceMappingURL=student_post.test.js.map

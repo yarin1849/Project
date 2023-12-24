@@ -54,7 +54,6 @@ describe("Student post tests", () => {
     expect(rc.owner).toBe(post1.owner);
   });
 
-
   // test("Test PUT /student/:id", async () => {
   //   const updatedStudent = { ...student, name: "Jane Doe 33" };
   //   const response = await request(app)
@@ -65,7 +64,7 @@ describe("Student post tests", () => {
   // });
 
   // test("Test DELETE /student/:id", async () => {
-  //   const response = await request(app).delete(`/student/${student._id}`);
-  //   expect(response.statusCode).toBe(200);
+    // const response = await request(app).delete(`/student/${student._id}`);
+    // expect(response.statusCode).toBe(200);
   // });
 });

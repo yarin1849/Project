@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BaseConstroller = void 0;
 class BaseConstroller {
     constructor(model) {
         this.model = model;
@@ -57,12 +58,34 @@ class BaseConstroller {
         });
     }
     putById(req, res) {
-        res.send("put student by id: " + req.params.id);
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("putStudent:" + req.body);
+            try {
+                yield this.model.findByIdAndUpdate(req.params.id, req.body);
+                const obj = yield this.model.findById(req.params.id);
+                res.status(200).send(obj);
+            }
+            catch (err) {
+                console.log(err);
+                res.status(406).send("fail: " + err.message);
+            }
+        });
     }
     deleteById(req, res) {
-        res.send("delete student by id: " + req.params.id);
+        return __awaiter(this, void 0, void 0, function* () {
+            console.log("deleteById:" + req.body);
+            try {
+                yield this.model.findByIdAndDelete(req.params.id);
+                res.status(200).send("OK");
+            }
+            catch (err) {
+                console.log(err);
+                res.status(406).send("fail: " + err.message);
+            }
+        });
     }
 }
+exports.BaseConstroller = BaseConstroller;
 const createController = (model) => {
     return new BaseConstroller(model);
 };
