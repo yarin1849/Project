@@ -15,12 +15,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
-// import StudentPost from "../models/student_post_model";
+const student_post_model_1 = __importDefault(require("../models/student_post_model"));
+const user_model_1 = __importDefault(require("../models/user_model"));
+let user = {
+    email: "testStudent@test.com",
+    password: "1234567890",
+};
+let accessToken;
 let app;
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
-    // await Student.deleteMany();
+    yield student_post_model_1.default.deleteMany();
+    yield user_model_1.default.deleteMany({ 'email': user.email });
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
@@ -28,16 +35,31 @@ afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
 const post1 = {
     title: "title1",
     message: "message1",
-    owner: "1234567890",
 };
 describe("Student post tests", () => {
     const addStudentPost = (post) => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/studentpost").send(post);
+        const response = yield (0, supertest_1.default)(app)
+            .post("/studentpost")
+            .set("Authorization", "JWT " + accessToken)
+            .send(post);
         expect(response.statusCode).toBe(201);
         expect(response.text).toBe("OK");
     });
+    test("Get token", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register")
+            .send(user);
+        user._id = response.body._id;
+        const response2 = yield (0, supertest_1.default)(app)
+            .post("/auth/login")
+            .send(user);
+        accessToken = response2.body.accessToken;
+        expect(accessToken).toBeDefined();
+    }));
     test("Test Get All Student posts - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/studentpost");
+        const response = yield (0, supertest_1.default)(app)
+            .get("/studentpost")
+            .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual([]);
     }));
@@ -45,13 +67,14 @@ describe("Student post tests", () => {
         addStudentPost(post1);
     }));
     test("Test Get All Students posts with one post in DB", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/studentpost");
+        const response = yield (0, supertest_1.default)(app).get("/studentpost")
+            .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(200);
         expect(response.body.length).toBe(1);
         const rc = response.body[0];
         expect(rc.title).toBe(post1.title);
         expect(rc.message).toBe(post1.message);
-        expect(rc.owner).toBe(post1.owner);
+        expect(rc.owner).toBe(user._id);
     }));
     // test("Test PUT /student/:id", async () => {
     //   const updatedStudent = { ...student, name: "Jane Doe 33" };
@@ -62,8 +85,8 @@ describe("Student post tests", () => {
     //   expect(response.body.name).toBe(updatedStudent.name);
     // });
     // test("Test DELETE /student/:id", async () => {
-    // const response = await request(app).delete(`/student/${student._id}`);
-    // expect(response.statusCode).toBe(200);
+    //   const response = await request(app).delete(`/student/${student._id}`);
+    //   expect(response.statusCode).toBe(200);
     // });
 });
 //# sourceMappingURL=student_post.test.js.map
