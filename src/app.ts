@@ -4,7 +4,7 @@ import express, { Express } from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 import studentRoute from "./routes/user_route";
-import studentPostRoute from "./routes/student_post_route";
+import studentPostRoute from "./routes/post_route";
 import authRoute from "./routes/auth_route";
 
 const initApp = (): Promise<Express> => {

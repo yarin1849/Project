@@ -2,7 +2,7 @@ import { Express } from "express";
 import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
-import StudentPost, { IStudentPost } from "../models/student_post_model";
+import StudentPost, { IStudentPost } from "../models/post_model";
 import User, { InUser } from "../models/user_model";
 /* fullName: string;
   email: string;
