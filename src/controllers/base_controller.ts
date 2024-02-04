@@ -36,20 +36,35 @@ export class BaseController<ModelType>{
     async post(req: Request, res: Response) {
         console.log("postStudent:" + req.body);
         try {
-            const obj = await this.model.create(req.body);
-            res.status(201).send(obj);
+            await this.model.create(req.body);
+            res.status(201).send("OK");
         } catch (err) {
             console.log(err);
             res.status(406).send("fail: " + err.message);
         }
     }
 
-    putById(req: Request, res: Response) {
-        res.send("put student by id: " + req.params.id);
+    async putById(req: Request, res: Response) {
+        console.log("putStudent:" + req.body);
+        try {
+            await this.model.findByIdAndUpdate(req.params.id, req.body);
+            const obj = await this.model.findById(req.params.id);
+            res.status(200).send(obj);
+        } catch (err) {
+            console.log(err);
+            res.status(406).send("fail: " + err.message);
+        }
     }
 
-    deleteById(req: Request, res: Response) {
-        res.send("delete student by id: " + req.params.id);
+    async deleteById(req: Request, res: Response) {
+        console.log("deleteById:" + req.body);
+        try {
+            await this.model.findByIdAndDelete(req.params.id);
+            res.status(200).send("OK");
+        } catch (err) {
+            console.log(err);
+            res.status(406).send("fail: " + err.message);
+        }
     }
 }
 

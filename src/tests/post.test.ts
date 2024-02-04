@@ -3,33 +3,20 @@ import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
 import StudentPost, { IStudentPost } from "../models/post_model";
-import User, { InUser } from "../models/user_model";
-/* fullName: string;
-  email: string;
-  password: string;
-  _id?: string;
-  refreshTokens?: string[];
-  img_url: string;
-  */
-let app: Express;
-const user: InUser = {
-  email: "test@student.post.test",
-  password: "1234567890",
-  fullName: "test",
-  img_url: "test",
-}
-let accessToken = "";
+import User, { IUser } from "../models/user_model";
 
+const user: IUser = {
+  email: "testStudent@test.com",
+  password: "1234567890",
+}
+let accessToken: string;
+let app: Express;
 beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
   await StudentPost.deleteMany();
-
   await User.deleteMany({ 'email': user.email });
-  const response = await request(app).post("/auth/register").send(user);
-  user._id = response.body._id;
-  const response2 = await request(app).post("/auth/login").send(user);
-  accessToken = response2.body.accessToken;
+
 });
 
 afterAll(async () => {
@@ -39,7 +26,6 @@ afterAll(async () => {
 const post1: IStudentPost = {
   title: "title1",
   message: "message1",
-  owner: "1234567890",
 };
 
 describe("Student post tests", () => {
@@ -49,13 +35,25 @@ describe("Student post tests", () => {
       .set("Authorization", "JWT " + accessToken)
       .send(post);
     expect(response.statusCode).toBe(201);
-    expect(response.body.owner).toBe(user._id);
-    expect(response.body.title).toBe(post.title);
-    expect(response.body.message).toBe(post.message);
+    expect(response.text).toBe("OK");
   };
 
+  test("Get token", async () => {
+    const response = await request(app)
+      .post("/auth/register")
+      .send(user);
+    user._id = response.body._id;
+    const response2 = await request(app)
+      .post("/auth/login")
+      .send(user);
+    accessToken = response2.body.accessToken;
+    expect(accessToken).toBeDefined();
+  });
+
   test("Test Get All Student posts - empty response", async () => {
-    const response = await request(app).get("/studentpost");
+    const response = await request(app)
+      .get("/studentpost")
+      .set("Authorization", "JWT " + accessToken);
     expect(response.statusCode).toBe(200);
     expect(response.body).toStrictEqual([]);
   });
@@ -65,12 +63,28 @@ describe("Student post tests", () => {
   });
 
   test("Test Get All Students posts with one post in DB", async () => {
-    const response = await request(app).get("/studentpost");
+    const response = await request(app).get("/studentpost")
+      .set("Authorization", "JWT " + accessToken);
     expect(response.statusCode).toBe(200);
+    expect(response.body.length).toBe(1);
     const rc = response.body[0];
     expect(rc.title).toBe(post1.title);
     expect(rc.message).toBe(post1.message);
     expect(rc.owner).toBe(user._id);
   });
 
+
+  // test("Test PUT /student/:id", async () => {
+  //   const updatedStudent = { ...student, name: "Jane Doe 33" };
+  //   const response = await request(app)
+  //     .put(`/student/${student._id}`)
+  //     .send(updatedStudent);
+  //   expect(response.statusCode).toBe(200);
+  //   expect(response.body.name).toBe(updatedStudent.name);
+  // });
+
+  // test("Test DELETE /student/:id", async () => {
+  //   const response = await request(app).delete(`/student/${student._id}`);
+  //   expect(response.statusCode).toBe(200);
+  // });
 });

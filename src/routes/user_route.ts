@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import studentController from "../controllers/user_controller";
+import studentController from "../controllers/app_user_controller";
 import authMiddleware from "../common/auth_middleware";
 
 router.get("/", authMiddleware, studentController.get.bind(studentController));
@@ -8,6 +8,7 @@ router.get("/", authMiddleware, studentController.get.bind(studentController));
 router.get("/:id", authMiddleware, studentController.getById.bind(studentController));
 
 router.post("/", authMiddleware, studentController.post.bind(studentController));
+
 
 router.put("/:id", authMiddleware, studentController.putById.bind(studentController));
 

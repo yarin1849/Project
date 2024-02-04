@@ -5,14 +5,12 @@ import { AuthRequest } from "../common/auth_middleware";
 
 class StudentPostController extends BaseController<IStudentPost>{
     constructor() {
-        super(StudentPost)
+        super(StudentPost);
     }
 
     async post(req: AuthRequest, res: Response) {
-        console.log("postStudent:" + req.body);
-        const _id = req.user._id;
-        req.body.owner = _id;
-        super.post(req, res);
+        req.body.owner = req.user._id;
+        return super.post(req, res);
     }
 }
 

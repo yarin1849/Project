@@ -23,10 +23,8 @@ class StudentPostController extends base_controller_1.BaseController {
             post: { get: () => super.post }
         });
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("postStudent:" + req.body);
-            const _id = req.user._id;
-            req.body.owner = _id;
-            _super.post.call(this, req, res);
+            req.body.owner = req.user._id;
+            return _super.post.call(this, req, res);
         });
     }
 }
