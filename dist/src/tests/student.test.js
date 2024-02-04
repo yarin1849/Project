@@ -15,8 +15,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
-const student_model_1 = __importDefault(require("../models/student_model"));
 const user_model_1 = __importDefault(require("../models/user_model"));
+const user_model_2 = __importDefault(require("../models/user_model"));
 let app;
 let accessToken;
 const user = {
@@ -26,8 +26,8 @@ const user = {
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
-    yield student_model_1.default.deleteMany();
-    user_model_1.default.deleteMany({ 'email': user.email });
+    yield user_model_1.default.deleteMany();
+    user_model_2.default.deleteMany({ 'email': user.email });
     yield (0, supertest_1.default)(app).post("/auth/register").send(user);
     const response = yield (0, supertest_1.default)(app).post("/auth/login").send(user);
     accessToken = response.body.accessToken;

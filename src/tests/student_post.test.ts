@@ -3,12 +3,20 @@ import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
 import StudentPost, { IStudentPost } from "../models/student_post_model";
-import User, { IUser } from "../models/user_model";
-
+import User, { InUser } from "../models/user_model";
+/* fullName: string;
+  email: string;
+  password: string;
+  _id?: string;
+  refreshTokens?: string[];
+  img_url: string;
+  */
 let app: Express;
-const user: IUser = {
+const user: InUser = {
   email: "test@student.post.test",
   password: "1234567890",
+  fullName: "test",
+  img_url: "test",
 }
 let accessToken = "";
 

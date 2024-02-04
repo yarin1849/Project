@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export interface IUser {
+export interface InUser {
   fullName: string;
   email: string;
   password: string;
@@ -9,7 +9,7 @@ export interface IUser {
   img_url: string;
 }
 
-const userSchema = new mongoose.Schema<IUser>({
+const userSchema = new mongoose.Schema<InUser>({
   fullName: {
     type: String,
     required: true,
@@ -32,4 +32,4 @@ const userSchema = new mongoose.Schema<IUser>({
   
 });
 
-export default mongoose.model<IUser>("User", userSchema);
+export default mongoose.model<InUser>("User", userSchema);

@@ -8,7 +8,7 @@ dotenv_1.default.config();
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const student_route_1 = __importDefault(require("./routes/student_route"));
+const user_route_1 = __importDefault(require("./routes/user_route"));
 const student_post_route_1 = __importDefault(require("./routes/student_post_route"));
 const auth_route_1 = __importDefault(require("./routes/auth_route"));
 const initApp = () => {
@@ -21,7 +21,7 @@ const initApp = () => {
             const app = (0, express_1.default)();
             app.use(body_parser_1.default.json());
             app.use(body_parser_1.default.urlencoded({ extended: true }));
-            app.use("/student", student_route_1.default);
+            app.use("/student", user_route_1.default);
             app.use("/studentpost", student_post_route_1.default);
             app.use("/auth", auth_route_1.default);
             resolve(app);
@@ -29,5 +29,6 @@ const initApp = () => {
     });
     return promise;
 };
+// test
 exports.default = initApp;
 //# sourceMappingURL=app.js.map

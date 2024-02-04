@@ -17,10 +17,19 @@ const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const student_post_model_1 = __importDefault(require("../models/student_post_model"));
 const user_model_1 = __importDefault(require("../models/user_model"));
+/* fullName: string;
+  email: string;
+  password: string;
+  _id?: string;
+  refreshTokens?: string[];
+  img_url: string;
+  */
 let app;
 const user = {
     email: "test@student.post.test",
     password: "1234567890",
+    fullName: "test",
+    img_url: "test",
 };
 let accessToken = "";
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {

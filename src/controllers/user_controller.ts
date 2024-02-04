@@ -1,9 +1,9 @@
-import User, { IUser } from "../models/user_model";
+import User, { InUser } from "../models/user_model";
 import { BaseController } from "./base_controller";
 import { Response } from "express";
 import { AuthRequest } from "../common/auth_middleware";
 
-class UserController extends BaseController<IUser> {
+class UserController extends BaseController<InUser> {
   constructor() {
     super(User);
   }
