@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Model } from "mongoose";
 
-export class BaseController<ModelType>{
+export class BaseConstroller<ModelType>{
 
     model: Model<ModelType>
     constructor(model: Model<ModelType>) {
@@ -69,7 +69,7 @@ export class BaseController<ModelType>{
 }
 
 const createController = <ModelType>(model: Model<ModelType>) => {
-    return new BaseController<ModelType>(model);
+    return new BaseConstroller<ModelType>(model);
 }
 
 export default createController;

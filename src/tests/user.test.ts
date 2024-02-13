@@ -1,7 +1,7 @@
 import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
-import Student from "../models/user_model";
+import Student from "../models/app_user_model";
 import { Express } from "express";
 import User from "../models/user_model";
 

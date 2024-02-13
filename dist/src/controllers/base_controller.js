@@ -9,8 +9,8 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BaseController = void 0;
-class BaseController {
+exports.BaseConstroller = void 0;
+class BaseConstroller {
     constructor(model) {
         this.model = model;
     }
@@ -85,9 +85,9 @@ class BaseController {
         });
     }
 }
-exports.BaseController = BaseController;
+exports.BaseConstroller = BaseConstroller;
 const createController = (model) => {
-    return new BaseController(model);
+    return new BaseConstroller(model);
 };
 exports.default = createController;
 //# sourceMappingURL=base_controller.js.map
