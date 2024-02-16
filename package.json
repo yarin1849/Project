@@ -1,5 +1,5 @@
 {
-  "name": "sa_2023b",
+  "name": "project",
   "version": "1.0.0",
   "description": "",
   "main": "app.js",
@@ -11,7 +11,7 @@
     "start": "tsc && node ./dist/src/server.js",
     "dev": "nodemon ./src/server.ts"
   },
-  "author": "Eliav Menachi",
+  "author": "Kareen Salameh",
   "license": "ISC",
   "dependencies": {
     "@types/bcrypt": "^5.0.2",

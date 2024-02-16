@@ -6,6 +6,7 @@ import StudentPost, { IStudentPost } from "../models/post_model";
 import User, { IUser } from "../models/user_model";
 
 const user: IUser = {
+  name: "bla",
   email: "testStudent@test.com",
   password: "1234567890",
 }

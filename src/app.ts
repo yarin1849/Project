@@ -3,8 +3,9 @@ env.config();
 import express, { Express } from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
-import studentRoute from "./routes/student_route";
+//import studentRoute from "./routes/student_route";
 import studentPostRoute from "./routes/post_route";
+import userRoute from "./routes/user_route";
 import authRoute from "./routes/auth_route";
 
 const initApp = (): Promise<Express> => {
@@ -24,7 +25,8 @@ const initApp = (): Promise<Express> => {
         res.header("Access-Control-Allow-Credentials", "true");
         next();
       })
-      app.use("/student", studentRoute);
+      //app.use("/student", studentRoute);
+      app.use("/user",userRoute);
       app.use("/studentpost", studentPostRoute);
       app.use("/auth", authRoute);
       app.use("/public", express.static("public"));

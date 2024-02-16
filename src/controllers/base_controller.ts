@@ -18,6 +18,7 @@ export class BaseConstroller<ModelType>{
                 const students = await this.model.find();
                 res.send(students);
             }
+            
         } catch (err) {
             res.status(500).json({ message: err.message });
         }

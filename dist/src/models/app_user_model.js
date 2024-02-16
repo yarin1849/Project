@@ -1,17 +1,20 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const mongoose_1 = __importDefault(require("mongoose"));
-const studentSchema = new mongoose_1.default.Schema({
-    name: {
-        type: String,
-        required: true,
-    },
-    _id: {
-        type: String,
-    },
+/*import mongoose from "mongoose";
+
+export interface IStudent {
+  name: string;
+  _id: string;
+}
+
+const studentSchema = new mongoose.Schema<IStudent>({
+  name: {
+    type: String,
+    required: true,
+  },
+  _id: {
+    type: String,
+  },
 });
-exports.default = mongoose_1.default.model("Students", studentSchema);
+
+export default mongoose.model<IStudent>("Students", studentSchema);
+*/ 
 //# sourceMappingURL=app_user_model.js.map

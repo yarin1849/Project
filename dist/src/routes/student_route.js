@@ -1,16 +1,18 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const router = express_1.default.Router();
-const app_user_controller_1 = __importDefault(require("../controllers/app_user_controller"));
-const auth_middleware_1 = __importDefault(require("../common/auth_middleware"));
-router.get("/", auth_middleware_1.default, app_user_controller_1.default.get.bind(app_user_controller_1.default));
-router.get("/:id", auth_middleware_1.default, app_user_controller_1.default.getById.bind(app_user_controller_1.default));
-router.post("/", auth_middleware_1.default, app_user_controller_1.default.post.bind(app_user_controller_1.default));
-router.put("/:id", auth_middleware_1.default, app_user_controller_1.default.putById.bind(app_user_controller_1.default));
-router.delete("/:id", auth_middleware_1.default, app_user_controller_1.default.deleteById.bind(app_user_controller_1.default));
-exports.default = router;
+/*import express from "express";
+const router = express.Router();
+import studentController from "../controllers/app_user_controller";
+import authMiddleware from "../common/auth_middleware";
+
+router.get("/", authMiddleware, studentController.get.bind(studentController));
+
+router.get("/:id", authMiddleware, studentController.getById.bind(studentController));
+
+router.post("/", authMiddleware, studentController.post.bind(studentController));
+
+router.put("/:id", authMiddleware, studentController.putById.bind(studentController));
+
+router.delete("/:id", authMiddleware, studentController.deleteById.bind(studentController));
+
+export default router;
+*/ 
 //# sourceMappingURL=student_route.js.map
