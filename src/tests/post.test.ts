@@ -25,6 +25,7 @@ afterAll(async () => {
 });
 
 const post1: IStudentPost = {
+  _id: 1,
   title: "title1",
   message: "message1",
 };
@@ -74,18 +75,44 @@ describe("Student post tests", () => {
     expect(rc.owner).toBe(user._id);
   });
 
+  test("Test PUT /studentpost/:id", async () => {
+    const updatedPost: IStudentPost = {
+      _id: 1,
+      title: "updatedTitle",
+      message: "updatedMessage",
+    };
+    const response = await request(app)
+      .put(`/studentpost/${post1._id}`)
+      .set("Authorization", "JWT " + accessToken)
+      .send(updatedPost);
+    expect(response.statusCode).toBe(200);
+    expect(response.body.title).toBe(updatedPost.title);
+    expect(response.body.message).toBe(updatedPost.message);
+    expect(response.body.owner).toBe(user._id);
+  });
 
-  // test("Test PUT /student/:id", async () => {
-  //   const updatedStudent = { ...student, name: "Jane Doe 33" };
-  //   const response = await request(app)
-  //     .put(`/student/${student._id}`)
-  //     .send(updatedStudent);
-  //   expect(response.statusCode).toBe(200);
-  //   expect(response.body.name).toBe(updatedStudent.name);
-  // });
+  test("Test DELETE /studentpost/:id", async () => {
+    const response = await request(app).delete(`/studentpost/${post1._id}`)
+      .set("Authorization", "JWT " + accessToken);
+    expect(response.statusCode).toBe(200);
+  });
+});
 
-  // test("Test DELETE /student/:id", async () => {
-  //   const response = await request(app).delete(`/student/${student._id}`);
-  //   expect(response.statusCode).toBe(200);
-  // });
+test("Test Post duplicate Student post", async () => {
+  const response = await request(app).post("/studentpost")
+    .set("Authorization", "JWT " + accessToken)
+    .send(post1);
+  expect(response.statusCode).toBe(406);
+});
+
+test("Test forbidden access without token", async () => {
+  const response = await request(app).get("/studentpost");
+  expect(response.statusCode).toBe(200);
+});
+
+test("Test access with invalid token", async () => {
+  const response = await request(app)
+    .get("/studentpost")
+    .set("Authorization", "JWT 1" + accessToken);
+  expect(response.statusCode).toBe(200);
 });

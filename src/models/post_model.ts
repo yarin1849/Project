@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 export interface IStudentPost {
+  _id: number;
   title: string;
   message: string;
   owner?: string;

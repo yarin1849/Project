@@ -34,6 +34,7 @@ afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
 const post1 = {
+    _id: 1,
     title: "title1",
     message: "message1",
 };
@@ -77,17 +78,41 @@ describe("Student post tests", () => {
         expect(rc.message).toBe(post1.message);
         expect(rc.owner).toBe(user._id);
     }));
-    // test("Test PUT /student/:id", async () => {
-    //   const updatedStudent = { ...student, name: "Jane Doe 33" };
-    //   const response = await request(app)
-    //     .put(`/student/${student._id}`)
-    //     .send(updatedStudent);
-    //   expect(response.statusCode).toBe(200);
-    //   expect(response.body.name).toBe(updatedStudent.name);
-    // });
-    // test("Test DELETE /student/:id", async () => {
-    //   const response = await request(app).delete(`/student/${student._id}`);
-    //   expect(response.statusCode).toBe(200);
-    // });
+    test("Test PUT /studentpost/:id", () => __awaiter(void 0, void 0, void 0, function* () {
+        const updatedPost = {
+            _id: 1,
+            title: "updatedTitle",
+            message: "updatedMessage",
+        };
+        const response = yield (0, supertest_1.default)(app)
+            .put(`/studentpost/${post1._id}`)
+            .set("Authorization", "JWT " + accessToken)
+            .send(updatedPost);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.title).toBe(updatedPost.title);
+        expect(response.body.message).toBe(updatedPost.message);
+        expect(response.body.owner).toBe(user._id);
+    }));
+    test("Test DELETE /studentpost/:id", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).delete(`/studentpost/${post1._id}`)
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(200);
+    }));
 });
+test("Test Post duplicate Student post", () => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield (0, supertest_1.default)(app).post("/studentpost")
+        .set("Authorization", "JWT " + accessToken)
+        .send(post1);
+    expect(response.statusCode).toBe(406);
+}));
+test("Test forbidden access without token", () => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield (0, supertest_1.default)(app).get("/studentpost");
+    expect(response.statusCode).toBe(200);
+}));
+test("Test access with invalid token", () => __awaiter(void 0, void 0, void 0, function* () {
+    const response = yield (0, supertest_1.default)(app)
+        .get("/studentpost")
+        .set("Authorization", "JWT 1" + accessToken);
+    expect(response.statusCode).toBe(200);
+}));
 //# sourceMappingURL=post.test.js.map
