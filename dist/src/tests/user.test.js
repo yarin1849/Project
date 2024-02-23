@@ -19,10 +19,6 @@ const user_model_1 = __importDefault(require("../models/user_model"));
 const user_model_2 = __importDefault(require("../models/user_model"));
 let app;
 let accessToken;
-/*const user = {
-  email: "testStudent@test.com",
-  password: "1234567890",
-}*/
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
@@ -49,11 +45,6 @@ describe("Student tests", () => {
         expect(response.statusCode).toBe(201);
         expect(response.text).toBe("OK");
     });
-    // test("Test Get All Students - empty response", async () => {
-    //   const response = await request(app).get("/user").set("Authorization", "JWT " + accessToken);
-    //   expect(response.statusCode).toBe(200);
-    //   expect(response.body).toStrictEqual([]);
-    // });
     test("Test Post Student", () => __awaiter(void 0, void 0, void 0, function* () {
         addStudent(student);
     }));
@@ -62,7 +53,6 @@ describe("Student tests", () => {
         expect(response.statusCode).toBe(200);
         expect(response.body.length).toBe(1);
         const st = response.body[0];
-        //console.log(response.body);
         expect(st.name).toBe(student.name);
         expect(st.email).toBe(student.email);
         //expect(st._id).toBe(student._id);
@@ -72,18 +62,37 @@ describe("Student tests", () => {
         const response = yield (0, supertest_1.default)(app).post("/user").set("Authorization", "JWT " + accessToken).send(student);
         expect(response.statusCode).toBe(406);
     }));
-    // test("Test PUT /student/:id", async () => {
-    //   const updatedStudent = { ...student, name: "Jane Doe 33" };
-    //   const response = await request(app)
-    //     .put("/user/" + student._id)
-    //     .set("Authorization", "JWT " + accessToken)
-    //     .send(updatedStudent);
-    //   expect(response.statusCode).toBe(200);
-    //   expect(response.body.name).toBe(updatedStudent.name);
-    // });
-    // test("Test DELETE /student/:id", async () => {
-    //   const response = await request(app).delete(`/student/${student._id}`);
-    //   expect(response.statusCode).toBe(200);
-    // });
+    test("Test PUT /student/:id", () => __awaiter(void 0, void 0, void 0, function* () {
+        const updatedStudent = Object.assign(Object.assign({}, student), { name: "Jane Doe 33" });
+        const response = yield (0, supertest_1.default)(app)
+            .put("/user/" + student._id)
+            .set("Authorization", "JWT " + accessToken)
+            .send(updatedStudent);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.name).toBe(updatedStudent.name);
+    }));
+    test("Test DELETE /student/:id", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).delete(`/student/${student._id}`);
+        expect(response.statusCode).toBe(200);
+    }));
+    test("Test Get All Students - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).get("/user").set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toStrictEqual([]);
+    }));
+    test("Test GET /user/:id", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).get(`/user/${student._id}`).set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.name).toBe(student.name);
+        expect(response.body.email).toBe(student.email);
+        expect(response.body.password).toBe(student.password);
+        expect(response.body._id).toBe(student._id);
+    }));
+    // Add more tests for controllers here
+    test("Test GET /user", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).get("/user").set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.length).toBeGreaterThan(0);
+    }));
 });
 //# sourceMappingURL=user.test.js.map

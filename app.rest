@@ -43,3 +43,15 @@ Content-Type: application/json
 }
 
 ###
+PUT http://localhost:3000/user/1234567891
+Content-Type: application/json
+
+{
+    "name": "Updated Name"
+}
+
+###
+
+DELETE http://localhost:3000/user/1234567891
+
+###
