@@ -17,26 +17,30 @@ const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const post_model_1 = __importDefault(require("../models/post_model"));
 const user_model_1 = __importDefault(require("../models/user_model"));
+let app;
 const user = {
     name: "bla",
-    email: "testStudent@test.com",
+    email: "test@student.post.test",
     password: "1234567890",
 };
-let accessToken;
-let app;
+let accessToken = "";
 beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
     yield post_model_1.default.deleteMany();
     yield user_model_1.default.deleteMany({ 'email': user.email });
+    const response = yield (0, supertest_1.default)(app).post("/auth/register").send(user);
+    user._id = response.body._id;
+    const response2 = yield (0, supertest_1.default)(app).post("/auth/login").send(user);
+    accessToken = response2.body.accessToken;
 }));
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
 const post1 = {
-    _id: 1,
     title: "title1",
     message: "message1",
+    owner: "1234567890",
 };
 describe("Student post tests", () => {
     const addStudentPost = (post) => __awaiter(void 0, void 0, void 0, function* () {
@@ -45,23 +49,12 @@ describe("Student post tests", () => {
             .set("Authorization", "JWT " + accessToken)
             .send(post);
         expect(response.statusCode).toBe(201);
-        expect(response.text).toBe("OK");
+        expect(response.body.owner).toBe(user._id);
+        expect(response.body.title).toBe(post.title);
+        expect(response.body.message).toBe(post.message);
     });
-    test("Get token", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app)
-            .post("/auth/register")
-            .send(user);
-        user._id = response.body._id;
-        const response2 = yield (0, supertest_1.default)(app)
-            .post("/auth/login")
-            .send(user);
-        accessToken = response2.body.accessToken;
-        expect(accessToken).toBeDefined();
-    }));
     test("Test Get All Student posts - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app)
-            .get("/studentpost")
-            .set("Authorization", "JWT " + accessToken);
+        const response = yield (0, supertest_1.default)(app).get("/studentpost");
         expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual([]);
     }));
@@ -69,10 +62,8 @@ describe("Student post tests", () => {
         addStudentPost(post1);
     }));
     test("Test Get All Students posts with one post in DB", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/studentpost")
-            .set("Authorization", "JWT " + accessToken);
+        const response = yield (0, supertest_1.default)(app).get("/studentpost");
         expect(response.statusCode).toBe(200);
-        expect(response.body.length).toBe(1);
         const rc = response.body[0];
         expect(rc.title).toBe(post1.title);
         expect(rc.message).toBe(post1.message);

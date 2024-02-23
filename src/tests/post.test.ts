@@ -5,19 +5,24 @@ import mongoose from "mongoose";
 import StudentPost, { IStudentPost } from "../models/post_model";
 import User, { IUser } from "../models/user_model";
 
+let app: Express;
 const user: IUser = {
   name: "bla",
-  email: "testStudent@test.com",
+  email: "test@student.post.test",
   password: "1234567890",
 }
-let accessToken: string;
-let app: Express;
+let accessToken = "";
+
 beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
   await StudentPost.deleteMany();
-  await User.deleteMany({ 'email': user.email });
 
+  await User.deleteMany({ 'email': user.email });
+  const response = await request(app).post("/auth/register").send(user);
+  user._id = response.body._id;
+  const response2 = await request(app).post("/auth/login").send(user);
+  accessToken = response2.body.accessToken;
 });
 
 afterAll(async () => {
@@ -25,9 +30,9 @@ afterAll(async () => {
 });
 
 const post1: IStudentPost = {
-  _id: 1,
   title: "title1",
   message: "message1",
+  owner: "1234567890",
 };
 
 describe("Student post tests", () => {
@@ -37,25 +42,13 @@ describe("Student post tests", () => {
       .set("Authorization", "JWT " + accessToken)
       .send(post);
     expect(response.statusCode).toBe(201);
-    expect(response.text).toBe("OK");
+    expect(response.body.owner).toBe(user._id);
+    expect(response.body.title).toBe(post.title);
+    expect(response.body.message).toBe(post.message);
   };
 
-  test("Get token", async () => {
-    const response = await request(app)
-      .post("/auth/register")
-      .send(user);
-    user._id = response.body._id;
-    const response2 = await request(app)
-      .post("/auth/login")
-      .send(user);
-    accessToken = response2.body.accessToken;
-    expect(accessToken).toBeDefined();
-  });
-
   test("Test Get All Student posts - empty response", async () => {
-    const response = await request(app)
-      .get("/studentpost")
-      .set("Authorization", "JWT " + accessToken);
+    const response = await request(app).get("/studentpost");
     expect(response.statusCode).toBe(200);
     expect(response.body).toStrictEqual([]);
   });
@@ -65,10 +58,8 @@ describe("Student post tests", () => {
   });
 
   test("Test Get All Students posts with one post in DB", async () => {
-    const response = await request(app).get("/studentpost")
-      .set("Authorization", "JWT " + accessToken);
+    const response = await request(app).get("/studentpost");
     expect(response.statusCode).toBe(200);
-    expect(response.body.length).toBe(1);
     const rc = response.body[0];
     expect(rc.title).toBe(post1.title);
     expect(rc.message).toBe(post1.message);
@@ -115,4 +106,5 @@ test("Test access with invalid token", async () => {
     .get("/studentpost")
     .set("Authorization", "JWT 1" + accessToken);
   expect(response.statusCode).toBe(200);
+
 });

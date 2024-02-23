@@ -119,6 +119,7 @@ router.post("/login", authController.login);
 *         description: logout completed successfully
 */
 router.get("/logout", authController.logout);
+
 router.get("/refresh", authController.refresh);
 
 export default router;
