@@ -9,23 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.BaseConstroller = void 0;
-class BaseConstroller {
+exports.BaseController = void 0;
+class BaseController {
     constructor(model) {
         this.model = model;
     }
     get(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("getAllStudents");
             try {
-                if (req.query.name) {
-                    const students = yield this.model.find({ name: req.query.name });
-                    res.send(students);
-                }
-                else {
-                    const students = yield this.model.find();
-                    res.send(students);
-                }
+                const objects = yield this.model.find();
+                res.send(objects);
             }
             catch (err) {
                 res.status(500).json({ message: err.message });
@@ -34,10 +27,9 @@ class BaseConstroller {
     }
     getById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("getStudentById:" + req.params.id);
             try {
-                const student = yield this.model.findById(req.params.id);
-                res.send(student);
+                const obj = yield this.model.findById(req.params.id);
+                res.send(obj);
             }
             catch (err) {
                 res.status(500).json({ message: err.message });
@@ -46,10 +38,9 @@ class BaseConstroller {
     }
     post(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("postStudent:" + req.body);
             try {
-                yield this.model.create(req.body);
-                res.status(201).send("OK");
+                const obj = yield this.model.create(req.body);
+                res.status(201).send(obj);
             }
             catch (err) {
                 console.log(err);
@@ -59,35 +50,30 @@ class BaseConstroller {
     }
     putById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("putStudent:" + req.body);
             try {
-                yield this.model.findByIdAndUpdate(req.params.id, req.body);
-                const obj = yield this.model.findById(req.params.id);
+                const obj = yield this.model.findByIdAndUpdate(req.params.id, req.body);
                 res.status(200).send(obj);
             }
             catch (err) {
-                console.log(err);
-                res.status(406).send("fail: " + err.message);
+                res.status(500).json({ message: err.message });
             }
         });
     }
     deleteById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log("deleteById:" + req.body);
             try {
-                yield this.model.findByIdAndDelete(req.params.id);
-                res.status(200).send("OK");
+                const obj = yield this.model.findByIdAndDelete(req.params.id);
+                res.status(200).send(obj);
             }
             catch (err) {
-                console.log(err);
-                res.status(406).send("fail: " + err.message);
+                res.status(500).json({ message: err.message });
             }
         });
     }
 }
-exports.BaseConstroller = BaseConstroller;
+exports.BaseController = BaseController;
 const createController = (model) => {
-    return new BaseConstroller(model);
+    return new BaseController(model);
 };
 exports.default = createController;
 //# sourceMappingURL=base_controller.js.map

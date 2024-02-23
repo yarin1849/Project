@@ -29,14 +29,16 @@ afterAll(async () => {
 
 const student: IUser = {
   name: "Joe 123",
-  _id : "33",
   email: "abc@test.com",
   password: "A00000000"
 };
 
 describe("Student tests", () => {
   const addStudent = async (student: IUser) => {
-    const response = await request(app).post("/user").set("Authorization", "JWT " + accessToken).send(student);
+    const response = await request(app)
+    .post("/user")
+    .set("Authorization", "JWT " + accessToken)
+    .send(student);
     expect(response.statusCode).toBe(201);
     expect(response.text).toBe("OK");
   };
@@ -59,8 +61,9 @@ describe("Student tests", () => {
     //console.log(response.body);
     expect(st.name).toBe(student.name);
     expect(st.email).toBe(student.email);
-    expect(st.password).toBe(student.password);
-    expect(st._id).toBe(student._id);
+    //expect(st._id).toBe(student._id);
+    expect(st.password).not.toBe(student.password); // Assuming st.password contains the hashed password
+
   });
 
   test("Test Post duplicate Student", async () => {

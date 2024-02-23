@@ -16,6 +16,7 @@ const user_model_1 = __importDefault(require("../models/user_model"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
     const imgUrl = req.body.imgUrl;
@@ -30,12 +31,13 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const salt = yield bcrypt_1.default.genSalt(10);
         const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
         const rs2 = yield user_model_1.default.create({
+            'name': name,
             'email': email,
             'password': encryptedPassword,
             'imgUrl': imgUrl
         });
         const tokens = yield generateTokens(rs2);
-        res.status(201).send(Object.assign({ email: rs2.email, _id: rs2._id, imgUrl: rs2.imgUrl }, tokens));
+        res.status(201).send(Object.assign({ name: rs2.name, email: rs2.email, _id: rs2._id, imgUrl: rs2.imgUrl }, tokens));
     }
     catch (err) {
         return res.status(400).send("error missing email or password");

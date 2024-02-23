@@ -1,9 +1,9 @@
 import StudentPost, { IStudentPost } from "../models/post_model";
-import { BaseConstroller } from "./base_controller";
+import { BaseController } from "./base_controller";
 import { Response } from "express";
 import { AuthRequest } from "../common/auth_middleware";
 
-class StudentPostController extends BaseConstroller<IStudentPost>{
+class StudentPostController extends BaseController<IStudentPost>{
     constructor() {
         super(StudentPost);
     }

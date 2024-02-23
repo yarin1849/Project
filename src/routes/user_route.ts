@@ -1,16 +1,50 @@
 import express from "express";
 const router = express.Router();
-import studentController from "../controllers/user_controller";
-import authMiddleware from "../common/auth_middleware";
+import UserController from "../controllers/user_controller";
+//import authMiddleware from "../common/auth_middleware";
 
-router.get("/", authMiddleware, studentController.get.bind(studentController));
+/**
+* @swagger
+* tags:
+*   name: Users
+*   description: API endpoints for managing users
+*/
 
-router.get("/:id", authMiddleware, studentController.getById.bind(studentController));
+/**
+* @swagger
+* components:
+*   schemas:
+*     User:
+*       type: object
+*       required:
+*         - username
+*         - email
+*         - password
+*       properties:
+*         username:
+*           type: string
+*           description: The username of the user
+*         email:
+*           type: string
+*           format: email
+*           description: The email address of the user
+*         password:
+*           type: string
+*           description: The password of the user
+*       example:
+*         username: 'john_doe'
+*         email: 'john@example.com'
+*         password: 'password123'
+*/
 
-router.post("/", authMiddleware, studentController.post.bind(studentController));
+router.get("/", UserController.get.bind(UserController));
 
-router.put("/:id", authMiddleware, studentController.putById.bind(studentController));
+router.get("/:id", UserController.getById.bind(UserController));
 
-router.delete("/:id", authMiddleware, studentController.deleteById.bind(studentController));
+router.post("/",UserController.post.bind(UserController));
+
+router.put("/:id",  UserController.putById.bind(UserController));
+
+router.delete("/:id", UserController.deleteById.bind(UserController));
 
 export default router;

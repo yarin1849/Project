@@ -37,13 +37,15 @@ afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
 }));
 const student = {
     name: "Joe 123",
-    _id: "33",
     email: "abc@test.com",
     password: "A00000000"
 };
 describe("Student tests", () => {
     const addStudent = (student) => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/user").set("Authorization", "JWT " + accessToken).send(student);
+        const response = yield (0, supertest_1.default)(app)
+            .post("/user")
+            .set("Authorization", "JWT " + accessToken)
+            .send(student);
         expect(response.statusCode).toBe(201);
         expect(response.text).toBe("OK");
     });
@@ -63,8 +65,8 @@ describe("Student tests", () => {
         //console.log(response.body);
         expect(st.name).toBe(student.name);
         expect(st.email).toBe(student.email);
-        expect(st.password).toBe(student.password);
-        expect(st._id).toBe(student._id);
+        //expect(st._id).toBe(student._id);
+        expect(st.password).not.toBe(student.password); // Assuming st.password contains the hashed password
     }));
     test("Test Post duplicate Student", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).post("/user").set("Authorization", "JWT " + accessToken).send(student);

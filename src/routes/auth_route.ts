@@ -8,7 +8,6 @@ import authController from "../controllers/auth_controller";
 *   description: The Authentication API
 */
 
-
 /**
 * @swagger
 * components:

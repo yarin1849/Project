@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { Document } from 'mongoose';
 
 const register = async (req: Request, res: Response) => {
+    const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
     const imgUrl = req.body.imgUrl;
@@ -20,6 +21,7 @@ const register = async (req: Request, res: Response) => {
         const encryptedPassword = await bcrypt.hash(password, salt);
         const rs2 = await User.create(
             {
+                'name' : name,
                 'email': email,
                 'password': encryptedPassword,
                 'imgUrl': imgUrl
@@ -27,6 +29,7 @@ const register = async (req: Request, res: Response) => {
         const tokens = await generateTokens(rs2)
         res.status(201).send(
             {
+                name: rs2.name,
                 email: rs2.email,
                 _id: rs2._id,
                 imgUrl: rs2.imgUrl,
