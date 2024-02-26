@@ -25,11 +25,11 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     app = yield (0, app_1.default)();
     console.log("beforeAll");
     yield post_model_1.default.deleteMany();
-    yield user_model_1.default.deleteMany({ 'email': 'test@student.post.test' });
+    yield user_model_1.default.deleteMany({ 'email': 'test@.post.test' });
     // Register a user
     const registerResponse = yield (0, supertest_1.default)(app).post("/auth/register").send({
         name: "bla",
-        email: "test@student.post.test",
+        email: "test@.post.test",
         password: "1234567890",
     });
     user = registerResponse.body;
@@ -41,6 +41,7 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
     accessToken = loginResponse.body.accessToken;
     // Create a post
     post1 = {
+        comments: [],
         title: "title1",
         message: "message1",
         owner: user._id,
@@ -49,15 +50,15 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
 afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
     yield mongoose_1.default.connection.close();
 }));
-describe("Student post controller tests", () => {
-    test("Test Get All Student posts - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/studentpost");
+describe("Post controller tests", () => {
+    test("Test Get All  posts - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).get("/userpost");
         expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual([]);
     }));
-    test("Test Post Student post", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test Post", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
-            .post("/studentpost")
+            .post("/userpost")
             .set("Authorization", "JWT " + accessToken)
             .send(post1);
         expect(response.statusCode).toBe(201);
@@ -65,22 +66,23 @@ describe("Student post controller tests", () => {
         expect(response.body.title).toBe(post1.title);
         expect(response.body.message).toBe(post1.message);
     }));
-    test("Test Get All Students posts with one post in DB", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/studentpost");
+    test("Test Get All user posts with one post in DB", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).get("/userpost");
         expect(response.statusCode).toBe(200);
         const rc = response.body[0];
         expect(rc.title).toBe(post1.title);
         expect(rc.message).toBe(post1.message);
         expect(rc.owner).toBe(user._id);
     }));
-    test("Test PUT /studentpost/:id", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test PUT /userpost/:id", () => __awaiter(void 0, void 0, void 0, function* () {
         const updatedPost = {
+            comments: [],
             title: "updatedTitle",
             message: "updatedMessage",
             owner: user._id,
         };
         const response = yield (0, supertest_1.default)(app)
-            .put(`/studentpost/${post1._id}`)
+            .put(`/userpost/${post1._id}`)
             .set("Authorization", "JWT " + accessToken)
             .send(updatedPost);
         expect(response.statusCode).toBe(200);
@@ -88,12 +90,12 @@ describe("Student post controller tests", () => {
         expect(response.body.message).toBe(updatedPost.message);
         expect(response.body.owner).toBe(user._id);
     }));
-    test("Test DELETE /studentpost/:id", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).delete(`/studentpost/${post1._id}`)
+    test("Test DELETE /userpost/:id", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app).delete(`/userpost/${post1._id}`)
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(200);
     }));
-    test("Test Get All Student posts - existing posts", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test Get All  posts - existing posts", () => __awaiter(void 0, void 0, void 0, function* () {
         // Create some posts
         const post2 = {
             title: "title2",
@@ -106,27 +108,27 @@ describe("Student post controller tests", () => {
             owner: user._id,
         };
         yield (0, supertest_1.default)(app)
-            .post("/studentpost")
+            .post("/userpost")
             .set("Authorization", "JWT " + accessToken)
             .send(post2);
         yield (0, supertest_1.default)(app)
-            .post("/studentpost")
+            .post("/userpost")
             .set("Authorization", "JWT " + accessToken)
             .send(post3);
-        const response = yield (0, supertest_1.default)(app).get("/studentpost");
+        const response = yield (0, supertest_1.default)(app).get("/userpost");
         expect(response.statusCode).toBe(200);
         expect(response.body.length).toBe(3); // Expecting 3 posts including the previously created post1
     }));
-    test("Test Get Student post by ID", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test Get User post by ID", () => __awaiter(void 0, void 0, void 0, function* () {
         // First, create a post
         const response = yield (0, supertest_1.default)(app)
-            .post("/studentpost")
+            .post("/userpost")
             .set("Authorization", "JWT " + accessToken)
             .send(post1);
         expect(response.statusCode).toBe(201);
         // Then, retrieve the created post by ID
         const createdPostId = response.body._id;
-        const getByIdResponse = yield (0, supertest_1.default)(app).get(`/studentpost/${createdPostId}`);
+        const getByIdResponse = yield (0, supertest_1.default)(app).get(`/userpost/${createdPostId}`);
         expect(getByIdResponse.statusCode).toBe(200);
         expect(getByIdResponse.body.title).toBe(post1.title);
         expect(getByIdResponse.body.message).toBe(post1.message);

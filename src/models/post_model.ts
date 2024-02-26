@@ -1,13 +1,14 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
-export interface IStudentPost {
+export interface IPost {
   title: string;
   message: string;
   owner?: string;
   _id?: number;
+  comments: ObjectId[];
 }
 
-const studentPostSchema = new mongoose.Schema<IStudentPost>({
+const PostSchema = new mongoose.Schema<IPost>({
   title: {
     type: String,
     required: true,
@@ -20,6 +21,12 @@ const studentPostSchema = new mongoose.Schema<IStudentPost>({
     type: String,
     required: true,
   },
+  comments: {
+    type: [mongoose.Schema.Types.ObjectId],
+    ref: "Comment",
+    default: [],
+    required: true,
+  },
 });
 
-export default mongoose.model<IStudentPost>("StudentPost", studentPostSchema);
+export default mongoose.model<IPost>("Post", PostSchema);

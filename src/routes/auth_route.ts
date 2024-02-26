@@ -120,6 +120,19 @@ router.post("/login", authController.login);
 */
 router.get("/logout", authController.logout);
 
+/**
+* @swagger
+* /auth/refresh:
+*   get:
+*     summary: refresh token
+*     tags: [Auth]
+*     description: need to provide the refresh token in the auth header
+*     security:
+*       - bearerAuth: []
+*     responses:
+*       200:
+*         description: refresh token completed successfully
+*/
 router.get("/refresh", authController.refresh);
 
 export default router;

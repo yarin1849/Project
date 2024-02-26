@@ -1,7 +1,7 @@
 import Usermodel, { IUser } from "../models/user_model";
 import createController from "./base_controller";
 
-const studentController = createController<IUser>(Usermodel);
+const UserController = createController<IUser>(Usermodel);
 
-export default studentController
+export default UserController
 

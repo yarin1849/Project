@@ -117,6 +117,19 @@ router.post("/login", auth_controller_1.default.login);
 *         description: logout completed successfully
 */
 router.get("/logout", auth_controller_1.default.logout);
+/**
+* @swagger
+* /auth/refresh:
+*   get:
+*     summary: refresh token
+*     tags: [Auth]
+*     description: need to provide the refresh token in the auth header
+*     security:
+*       - bearerAuth: []
+*     responses:
+*       200:
+*         description: refresh token completed successfully
+*/
 router.get("/refresh", auth_controller_1.default.refresh);
 exports.default = router;
 //# sourceMappingURL=auth_route.js.map

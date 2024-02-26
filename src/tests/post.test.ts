@@ -3,23 +3,23 @@ import request from "supertest";
 import initApp from "../app";
 import mongoose from "mongoose";
 import User, { IUser } from "../models/user_model";
-import StudentPost, { IStudentPost } from "../models/post_model";
+import Post, { IPost } from "../models/post_model";
 
 let app: Express;
 let accessToken = "";
 let user: IUser;
-let post1: IStudentPost;
+let post1: IPost;
 
 beforeAll(async () => {
   app = await initApp();
   console.log("beforeAll");
-  await StudentPost.deleteMany();
-  await User.deleteMany({ 'email': 'test@student.post.test' });
+  await Post.deleteMany();
+  await User.deleteMany({ 'email': 'test@.post.test' });
 
   // Register a user
   const registerResponse = await request(app).post("/auth/register").send({
     name: "bla",
-    email: "test@student.post.test",
+    email: "test@.post.test",
     password: "1234567890",
   });
   user = registerResponse.body;
@@ -33,6 +33,7 @@ beforeAll(async () => {
 
   // Create a post
   post1 = {
+    comments: [],
     title: "title1",
     message: "message1",
     owner: user._id,
@@ -43,16 +44,16 @@ afterAll(async () => {
   await mongoose.connection.close();
 });
 
-describe("Student post controller tests", () => {
-  test("Test Get All Student posts - empty response", async () => {
-    const response = await request(app).get("/studentpost");
+describe("Post controller tests", () => {
+  test("Test Get All  posts - empty response", async () => {
+    const response = await request(app).get("/userpost");
     expect(response.statusCode).toBe(200);
     expect(response.body).toStrictEqual([]);
   });
 
-  test("Test Post Student post", async () => {
+  test("Test Post", async () => {
     const response = await request(app)
-      .post("/studentpost")
+      .post("/userpost")
       .set("Authorization", "JWT " + accessToken)
       .send(post1);
     expect(response.statusCode).toBe(201);
@@ -61,8 +62,8 @@ describe("Student post controller tests", () => {
     expect(response.body.message).toBe(post1.message);
   });
 
-  test("Test Get All Students posts with one post in DB", async () => {
-    const response = await request(app).get("/studentpost");
+  test("Test Get All user posts with one post in DB", async () => {
+    const response = await request(app).get("/userpost");
     expect(response.statusCode).toBe(200);
     const rc = response.body[0];
     expect(rc.title).toBe(post1.title);
@@ -70,14 +71,15 @@ describe("Student post controller tests", () => {
     expect(rc.owner).toBe(user._id);
   });
 
-  test("Test PUT /studentpost/:id", async () => {
-    const updatedPost: IStudentPost = {
+  test("Test PUT /userpost/:id", async () => {
+    const updatedPost: IPost = {
+      comments: [],
       title: "updatedTitle",
       message: "updatedMessage",
       owner: user._id,
     };
     const response = await request(app)
-      .put(`/studentpost/${post1._id}`)
+      .put(`/userpost/${post1._id}`)
       .set("Authorization", "JWT " + accessToken)
       .send(updatedPost);
     expect(response.statusCode).toBe(200);
@@ -86,13 +88,13 @@ describe("Student post controller tests", () => {
     expect(response.body.owner).toBe(user._id);
   });
 
-  test("Test DELETE /studentpost/:id", async () => {
-    const response = await request(app).delete(`/studentpost/${post1._id}`)
+  test("Test DELETE /userpost/:id", async () => {
+    const response = await request(app).delete(`/userpost/${post1._id}`)
       .set("Authorization", "JWT " + accessToken);
     expect(response.statusCode).toBe(200);
   });
 
-  test("Test Get All Student posts - existing posts", async () => {
+  test("Test Get All  posts - existing posts", async () => {
     // Create some posts
     const post2 = {
       title: "title2",
@@ -106,31 +108,31 @@ describe("Student post controller tests", () => {
     };
 
     await request(app)
-      .post("/studentpost")
+      .post("/userpost")
       .set("Authorization", "JWT " + accessToken)
       .send(post2);
 
     await request(app)
-      .post("/studentpost")
+      .post("/userpost")
       .set("Authorization", "JWT " + accessToken)
       .send(post3);
 
-    const response = await request(app).get("/studentpost");
+    const response = await request(app).get("/userpost");
     expect(response.statusCode).toBe(200);
     expect(response.body.length).toBe(3); // Expecting 3 posts including the previously created post1
   });
 
-  test("Test Get Student post by ID", async () => {
+  test("Test Get User post by ID", async () => {
     // First, create a post
     const response = await request(app)
-      .post("/studentpost")
+      .post("/userpost")
       .set("Authorization", "JWT " + accessToken)
       .send(post1);
     expect(response.statusCode).toBe(201);
 
     // Then, retrieve the created post by ID
     const createdPostId = response.body._id;
-    const getByIdResponse = await request(app).get(`/studentpost/${createdPostId}`);
+    const getByIdResponse = await request(app).get(`/userpost/${createdPostId}`);
     expect(getByIdResponse.statusCode).toBe(200);
     expect(getByIdResponse.body.title).toBe(post1.title);
     expect(getByIdResponse.body.message).toBe(post1.message);

@@ -12,71 +12,143 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteComment = exports.updateComment = exports.getCommentsByPostId = exports.createComment = void 0;
 const comment_model_1 = __importDefault(require("../models/comment_model"));
-// Controller function to create a new comment
-const createComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { postId, userId, content } = req.body;
-        // Create a new comment object
-        const newComment = new comment_model_1.default({
-            postId,
-            userId,
-            content,
+const post_model_1 = __importDefault(require("../models/post_model"));
+const base_controller_1 = require("./base_controller");
+class CommentController extends base_controller_1.BaseController {
+    constructor() {
+        super(comment_model_1.default);
+    }
+    post(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const userId = req.user._id;
+                const { content, postId } = req.body;
+                const comment1 = yield post_model_1.default.findById(postId);
+                if (!comment1) {
+                    res.status(404).json({ message: "post not found" });
+                    return;
+                }
+                const comment = yield comment_model_1.default.create({
+                    content,
+                    author: userId,
+                    postId: comment1.id,
+                });
+                comment1.comments.push(comment.id);
+                yield comment1.save();
+                res.status(201).json(comment);
+            }
+            catch (error) {
+                res.status(500).json({ message: "Internal Server Error" });
+            }
         });
-        // Save the new comment to the database
-        const savedComment = yield newComment.save();
-        res.status(201).json(savedComment);
     }
-    catch (error) {
-        res.status(500).json({ error: 'Unable to create comment' });
-    }
-});
-exports.createComment = createComment;
-// Controller function to get comments for a specific post
-const getCommentsByPostId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const postId = req.params.postId;
-        // Find all comments associated with the specified post ID
-        const comments = yield comment_model_1.default.find({ postId });
-        res.status(200).json(comments);
-    }
-    catch (error) {
-        res.status(500).json({ error: 'Unable to get comments' });
-    }
-});
-exports.getCommentsByPostId = getCommentsByPostId;
-// Controller function to update a comment
-const updateComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const commentId = req.params.commentId;
-        const { content } = req.body;
-        // Find the comment by ID and update its content
-        const updatedComment = yield comment_model_1.default.findByIdAndUpdate(commentId, { content }, { new: true } // Return the updated comment
-        );
-        if (!updatedComment) {
-            return res.status(404).json({ error: 'Comment not found' });
-        }
-        res.status(200).json(updatedComment);
-    }
-    catch (error) {
-        res.status(500).json({ error: 'Unable to update comment' });
-    }
-});
-exports.updateComment = updateComment;
-const deleteComment = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const commentId = req.params.commentId;
-        // Find the comment by ID and delete it
-        const deletedComment = yield comment_model_1.default.findByIdAndDelete(commentId);
-        if (!deletedComment) {
-            return res.status(404).json({ error: 'Comment not found' });
-        }
-        res.status(200).json({ message: 'Comment deleted successfully' });
-    }
-    catch (error) {
-        res.status(500).json({ error: 'Unable to delete comment' });
-    }
-});
-exports.deleteComment = deleteComment;
+}
+exports.default = new CommentController();
+// import { Request, Response } from "express";
+// //import { Model } from "mongoose";
+// import { BaseController } from "./base_controller";
+// import Comment, { IComment } from "../models/comment_model";
+// // Extend the Request interface to include the user property
+// declare module "express" {
+//   interface Request {
+//     user?: { _id: string };
+//   }
+// }
+// class CommentController extends BaseController<IComment> {
+//     constructor() {
+//         super(Comment);
+//     }
+//     async post(req: Request, res: Response) {
+//       try {
+//         // Assuming you have some middleware to authenticate the user and attach their ID to req.user
+//         const userId = req.user._id;
+//         // Create a new comment with the user ID attached
+//         const obj = await this.model.create({ ...req.body, user: userId });
+//         res.status(201).send(obj);
+//       } catch (err) {
+//         console.log(err);
+//         res.status(406).send("fail: " + err.message);
+//       }
+//     }
+//     async putById(req: Request, res: Response) {
+//       try {
+//         const obj = await this.model.findByIdAndUpdate(req.params.id, req.body);
+//         res.status(200).send(obj);
+//       } catch (err) {
+//         res.status(500).json({ message: err.message });
+//       }
+//     }
+//     async deleteById(req: Request, res: Response) {
+//       try {
+//         const obj = await this.model.findByIdAndDelete(req.params.id);
+//         res.status(200).send(obj);
+//       } catch (err) {
+//         res.status(500).json({ message: err.message });
+//       }
+//     }
+//   }
+// export default CommentController;
+// import { Request, Response } from 'express';
+// import CommentModel, { IComment } from '../models/comment_model';
+// // Controller function to create a new comment
+// export const createComment = async (req: Request, res: Response) => {
+//   try {
+//     const { postId, userId, content } = req.body;
+//     // Create a new comment object
+//     const newComment: IComment = new CommentModel({
+//       postId,
+//       userId,
+//       content,
+//     });
+//     // Save the new comment to the database
+//     const savedComment = await newComment.save();
+//     res.status(201).json(savedComment);
+//   } catch (error) {
+//     res.status(500).json({ error: 'Unable to create comment' });
+//   }
+// };
+// // Controller function to get comments for a specific post
+// export const getCommentsByPostId = async (req: Request, res: Response) => {
+//   try {
+//     const postId = req.params.postId;
+//     // Find all comments associated with the specified post ID
+//     const comments = await CommentModel.find({ postId });
+//     res.status(200).json(comments);
+//   } catch (error) {
+//     res.status(500).json({ error: 'Unable to get comments' });
+//   }
+// };
+// // Controller function to update a comment
+// export const updateComment = async (req: Request, res: Response) => {
+//     try {
+//       const commentId = req.params.commentId;
+//       const { content } = req.body;
+//       // Find the comment by ID and update its content
+//       const updatedComment = await CommentModel.findByIdAndUpdate(
+//         commentId,
+//         { content },
+//         { new: true } // Return the updated comment
+//       );
+//       if (!updatedComment) {
+//         return res.status(404).json({ error: 'Comment not found' });
+//       }
+//       res.status(200).json(updatedComment);
+//     } catch (error) {
+//       res.status(500).json({ error: 'Unable to update comment' });
+//     }
+//   };
+//   export const deleteComment = async (req: Request, res: Response) => {
+//     try {
+//       const commentId = req.params.commentId;
+//       // Find the comment by ID and delete it
+//       const deletedComment = await CommentModel.findByIdAndDelete(commentId);
+//       if (!deletedComment) {
+//         return res.status(404).json({ error: 'Comment not found' });
+//       }
+//       res.status(200).json({ message: 'Comment deleted successfully' });
+//     } catch (error) {
+//       res.status(500).json({ error: 'Unable to delete comment' });
+//     }
+//   };
 //# sourceMappingURL=comment_controller.js.map
