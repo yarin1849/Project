@@ -40,9 +40,10 @@ const auth_middleware_1 = __importDefault(require("../common/auth_middleware"));
 *         password: 'password123'
 */
 router.get("/", auth_middleware_1.default, user_controller_1.default.get.bind(user_controller_1.default));
-router.get("/:id", auth_middleware_1.default, user_controller_1.default.getById.bind(user_controller_1.default));
+//router.get("/:id", authMiddleware, UserController.getById.bind(UserController));
 router.post("/", auth_middleware_1.default, user_controller_1.default.post.bind(user_controller_1.default));
-router.put("/:id", auth_middleware_1.default, user_controller_1.default.putById.bind(user_controller_1.default));
+router.put("/", auth_middleware_1.default, user_controller_1.default.putById2.bind(user_controller_1.default));
+router.put("/:id", auth_middleware_1.default, user_controller_1.default.putById2.bind(user_controller_1.default));
 router.delete("/:id", auth_middleware_1.default, user_controller_1.default.deleteById.bind(user_controller_1.default));
 exports.default = router;
 //# sourceMappingURL=user_route.js.map

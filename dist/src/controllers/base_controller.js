@@ -18,7 +18,12 @@ class BaseController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const objects = yield this.model.find();
-                res.send(objects);
+                if (objects.length === 0) {
+                    res.send([]); // Return an empty array if no objects are found
+                }
+                else {
+                    res.send(objects);
+                }
             }
             catch (err) {
                 res.status(500).json({ message: err.message });
@@ -63,6 +68,11 @@ class BaseController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const obj = yield this.model.findByIdAndDelete(req.params.id);
+                if (!obj) {
+                    // If the object with the given ID is not found
+                    return res.status(404).json({ message: "Object not found" });
+                }
+                // If the object is successfully deleted
                 res.status(200).send(obj);
             }
             catch (err) {

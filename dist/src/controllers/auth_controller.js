@@ -44,20 +44,36 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 const generateTokens = (user) => __awaiter(void 0, void 0, void 0, function* () {
-    const accessToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+    const accessToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, {
+        expiresIn: process.env.JWT_EXPIRATION,
+    });
     const refreshToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET);
     if (user.refreshTokens == null) {
         user.refreshTokens = [refreshToken];
     }
-    else {
+    else if (!user.refreshTokens.includes(refreshToken)) {
         user.refreshTokens.push(refreshToken);
     }
     yield user.save();
     return {
-        'accessToken': accessToken,
-        'refreshToken': refreshToken
+        accessToken,
+        refreshToken,
     };
 });
+// const generateTokens = async (user: Document & IUser) => {
+//     const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+//     const refreshToken = jwt.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET);
+//     if (user.refreshTokens == null) {
+//         user.refreshTokens = [refreshToken];
+//     } else {
+//         user.refreshTokens.push(refreshToken);
+//     }
+//     await user.save();
+//     return {
+//         'accessToken': accessToken,
+//         'refreshToken': refreshToken
+//     };
+// }
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
     const password = req.body.password;
@@ -94,7 +110,7 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             if (!userDb.refreshTokens || !userDb.refreshTokens.includes(refreshToken)) {
                 userDb.refreshTokens = [];
                 yield userDb.save();
-                return res.sendStatus(401);
+                return res.status(401).send("Invalid refresh token");
             }
             else {
                 userDb.refreshTokens = userDb.refreshTokens.filter(t => t !== refreshToken);
@@ -103,7 +119,7 @@ const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             }
         }
         catch (err) {
-            res.sendStatus(401).send(err.message);
+            res.status(400).send(err.message);
         }
     }));
 });
@@ -131,11 +147,11 @@ const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             yield userDb.save();
             return res.status(200).send({
                 'accessToken': accessToken,
-                'refreshToken': refreshToken
+                'refreshToken': newRefreshToken // Use the new refresh token here
             });
         }
         catch (err) {
-            res.sendStatus(401).send(err.message);
+            return res.status(401).send(err.message); // Return the error response properly
         }
     }));
 });

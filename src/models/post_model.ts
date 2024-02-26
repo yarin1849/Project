@@ -6,6 +6,7 @@ export interface IPost {
   owner?: string;
   _id?: number;
   comments: ObjectId[];
+  postImg: string;
 }
 
 const PostSchema = new mongoose.Schema<IPost>({
@@ -25,6 +26,10 @@ const PostSchema = new mongoose.Schema<IPost>({
     type: [mongoose.Schema.Types.ObjectId],
     ref: "Comment",
     default: [],
+    required: true,
+  },
+  postImg: {
+    type: String,
     required: true,
   },
 });

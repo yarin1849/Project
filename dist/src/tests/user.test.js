@@ -43,21 +43,36 @@ const user = {
     password: "A00000000"
 };
 describe("Users tests", () => {
-    const adduser = (user) => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app)
-            .post("/user")
-            .set("Authorization", "JWT " + accessToken)
-            .send(user);
-        expect(response.statusCode).toBe(201);
-        expect(response.text).toBe("OK");
-    });
+    // const adduser = async (user: IUser) => {
+    //   const response = await request(app)
+    //   .post("/user")
+    //   .set("Authorization", "JWT " + accessToken)
+    //   .send(user);
+    //   expect(response.statusCode).toBe(201);
+    //   expect(response.text).toBe("OK");
+    // };
     // test("Test Get All users - empty response", async () => {
     //   const response = await request(app).get("/user").set("Authorization", "JWT " + accessToken);
     //   expect(response.statusCode).toBe(200);
     //   expect(response.body).toStrictEqual([]);
     // });
+    test("Test Get current user", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .get("/user")
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.name).toBe(user.name);
+        expect(response.body.email).toBe(user.email);
+    }));
+    // test("Test Post user", async () => {
+    //   adduser(user);
+    // });
     test("Test Post user", () => __awaiter(void 0, void 0, void 0, function* () {
-        adduser(user);
+        const response = yield (0, supertest_1.default)(app)
+            .post("/user")
+            .set("Authorization", "JWT " + accessToken)
+            .send(user);
+        expect(response.statusCode).toBe(201);
     }));
     test("Test Get All users with one user in DB", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app).get("/user").set("Authorization", "JWT " + accessToken);
@@ -70,35 +85,50 @@ describe("Users tests", () => {
         //expect(st._id).toBe(user._id);
         expect(st.password).not.toBe(user.password); // Assuming st.password contains the hashed password
     }));
+    // test("Test Post duplicate user", async () => {
+    //   const response = await request(app).post("/user").set("Authorization", "JWT " + accessToken).send(user);
+    //   expect(response.statusCode).toBe(406);
+    // });
     test("Test Post duplicate user", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).post("/user").set("Authorization", "JWT " + accessToken).send(user);
+        const response = yield (0, supertest_1.default)(app)
+            .post("/user")
+            .set("Authorization", "JWT " + accessToken)
+            .send(user);
         expect(response.statusCode).toBe(406);
     }));
-    // test("Test PUT /user/:id", async () => {
-    //   const updateduser = { ...user, name: "Jane Doe 33" };
-    //   const response = await request(app)
-    //     .put("/user/" + user._id)
-    //     .set("Authorization", "JWT " + accessToken)
-    //     .send(updateduser);
-    //   expect(response.statusCode).toBe(200);
-    //   expect(response.body.name).toBe(updateduser.name);
-    // });
-    // test("Test DELETE /user/:id", async () => {
-    //   const response = await request(app).delete(`/user/${user._id}`);
-    //   expect(response.statusCode).toBe(200);
-    // });
+    test("Test Update current user", () => __awaiter(void 0, void 0, void 0, function* () {
+        const updatedUserData = {
+            name: "Updated Name",
+            email: "updated@test.com",
+            password: "A00000000",
+        };
+        const response = yield (0, supertest_1.default)(app)
+            .put("/user") // Assuming the endpoint is correct
+            .set("Authorization", "JWT " + accessToken)
+            .send(updatedUserData);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.name).toBe(updatedUserData.name);
+        expect(response.body.email).toBe(updatedUserData.email);
+        // Verify that the user data is updated in the database
+        const updatedUser = yield user_model_2.default.findOne({ email: updatedUserData.email });
+        expect(updatedUser).not.toBeNull();
+        expect(updatedUser.name).toBe(updatedUserData.name);
+    }));
     test("Test DELETE /user/:id", () => __awaiter(void 0, void 0, void 0, function* () {
         // Add the user to the database
-        yield adduser(user);
-        // Get the user ID of the added user
-        const addeduser = yield user_model_2.default.findOne({ email: user.email });
-        const userId = addeduser._id;
-        // Send the delete request with the appropriate authorization token
         const response = yield (0, supertest_1.default)(app)
-            .delete(`/user/${userId}`) // Assuming the endpoint is /user/:id
+            .post("/user")
+            .set("Authorization", "JWT " + accessToken)
+            .send(user);
+        expect(response.statusCode).toBe(201);
+        // Get the user ID of the added user
+        const addedUser = yield user_model_2.default.findOne({ email: user.email });
+        const userId = addedUser._id;
+        // Send the delete request with the appropriate authorization token
+        const deleteResponse = yield (0, supertest_1.default)(app)
+            .delete(`/user/${userId}`)
             .set("Authorization", "JWT " + accessToken);
-        // Check the response status code
-        expect(response.statusCode).toBe(200);
+        expect(deleteResponse.statusCode).toBe(200);
     }));
 });
 //# sourceMappingURL=user.test.js.map

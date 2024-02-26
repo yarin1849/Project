@@ -4,7 +4,7 @@ import express, { Express } from "express";
 import mongoose from "mongoose";
 import bodyParser from "body-parser";
 //import studentRoute from "./routes/student_route";
-import studentPostRoute from "./routes/post_route";
+import PostRoute from "./routes/post_route";
 import userRoute from "./routes/user_route";
 import authRoute from "./routes/auth_route";
 
@@ -27,7 +27,7 @@ const initApp = (): Promise<Express> => {
       })
       //app.use("/student", studentRoute);
       app.use("/user",userRoute);
-      app.use("/userpost", studentPostRoute);
+      app.use("/userpost", PostRoute);
       app.use("/auth", authRoute);
       app.use("/public", express.static("public"));
       resolve(app);

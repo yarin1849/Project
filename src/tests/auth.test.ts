@@ -3,6 +3,7 @@ import initApp from "../app";
 import mongoose from "mongoose";
 import { Express } from "express";
 import User from "../models/user_model";
+import jwt from 'jsonwebtoken';
 // import jwt from 'jsonwebtoken'; // Import jsonwebtoken library
 
 // // Add the generateValidRefreshToken function here
@@ -192,15 +193,15 @@ describe("Auth tests", () => {
       });
     expect(response.statusCode).toBe(400);
   });
-  test("Test missing name in registration", async () => {
-    const response = await request(app)
-      .post("/auth/register")
-      .send({
-        email: "test@test.com",
-        password: "1234567890",
-      });
-    expect(response.statusCode).toBe(400);
-  });
+  // test("Test missing name in registration", async () => {
+  //   const response = await request(app)
+  //     .post("/auth/register")
+  //     .send({
+  //       email: "test@test.com",
+  //       password: "1234567890",
+  //     });
+  //   expect(response.statusCode).toBe(400);
+  // });
   test("Test missing name in registration", async () => {
     const response = await request(app)
       .post("/auth/register")
@@ -211,58 +212,108 @@ describe("Auth tests", () => {
     expect(response.statusCode).toBe(400);
     expect(response.text).toBe("missing email or password");
   });
-  test("Test Login with incorrect email", async () => {
+    test("Test Login with incorrect email", async () => {
+      const response = await request(app)
+        .post("/auth/login")
+        .send({
+          email: "incorrectemail@test.com", // Incorrect email
+          password: "1234567890", // Correct password
+        });
+      expect(response.statusCode).toBe(401);
+      expect(response.text).toBe("email or password incorrect");
+    });
+    
+    test("Test Login with incorrect password", async () => {
+      const response = await request(app)
+        .post("/auth/login")
+        .send({
+          email: "test@test.com", // Correct email
+          password: "incorrectpassword", // Incorrect password
+        });
+      expect(response.statusCode).toBe(401);
+      expect(response.text).toBe("email or password incorrect");
+    });
+    
+    test("Test Logout with missing refresh token", async () => {
+      const response = await request(app)
+        .get("/auth/logout");
+      expect(response.statusCode).toBe(401);
+    });
+    
+    test("Test Logout with invalid refresh token", async () => {
+      const invalidRefreshToken = "invalid_refresh_token";
+      const response = await request(app)
+        .get("/auth/logout")
+        .set("Authorization", "JWT " + invalidRefreshToken);
+      expect(response.statusCode).toBe(401);
+    });
+    
+
+  // Remove the commented out test cases if they are not needed anymore
+
+  test("Test Register missing name", async () => {
+    const response = await request(app)
+      .post("/auth/register")
+      .send({
+        email: "test@test.com",
+        password: "1234567890",
+      });
+    expect(response.statusCode).toBe(400);
+  });
+  test("Test Login with missing email", async () => {
     const response = await request(app)
       .post("/auth/login")
       .send({
-        email: "incorrectemail@test.com", // Incorrect email
-        password: "1234567890", // Correct password
+        password: "1234567890",
       });
-    expect(response.statusCode).toBe(401);
-    expect(response.text).toBe("email or password incorrect");
+    expect(response.statusCode).toBe(400);
   });
-  
+  test("Test Login with missing password", async () => {
+    const response = await request(app)
+      .post("/auth/login")
+      .send({
+        email: "test@test.com",
+      });
+    expect(response.statusCode).toBe(400);
+  });
+  test("Test refresh token with missing token", async () => {
+    const response = await request(app)
+      .get("/auth/refresh");
+    expect(response.statusCode).toBe(401);
+  });
+  test("Test refresh token with invalid token", async () => {
+    const invalidRefreshToken = "invalid_refresh_token";
+    const response = await request(app)
+      .get("/auth/refresh")
+      .set("Authorization", "JWT " + invalidRefreshToken);
+    expect(response.statusCode).toBe(401);
+  });
+  test("Test refresh token with valid token but not in database", async () => {
+    const validRefreshToken = jwt.sign({ _id: "non_existing_user_id" }, process.env.JWT_REFRESH_SECRET);
+    const response = await request(app)
+      .get("/auth/refresh")
+      .set("Authorization", "JWT " + validRefreshToken);
+    expect(response.statusCode).toBe(401);
+  });
+  // test("Test Login with non-existent email", async () => {
+  //   const response = await request(app)
+  //     .post("/auth/login")
+  //     .send({
+  //       email: "nonexistent@test.com",
+  //       password: "1234567890",
+  //     });
+  //   expect(response.statusCode).toBe(401);
+  // });
+
   test("Test Login with incorrect password", async () => {
     const response = await request(app)
       .post("/auth/login")
       .send({
-        email: "test@test.com", // Correct email
-        password: "incorrectpassword", // Incorrect password
+        email: "test@test.com",
+        password: "incorrectpassword",
       });
     expect(response.statusCode).toBe(401);
     expect(response.text).toBe("email or password incorrect");
+
   });
-  
-  test("Test Logout with missing refresh token", async () => {
-    const response = await request(app)
-      .get("/auth/logout");
-    expect(response.statusCode).toBe(401);
-  });
-  
-  test("Test Logout with invalid refresh token", async () => {
-    const invalidRefreshToken = "invalid_refresh_token";
-    const response = await request(app)
-      .get("/auth/logout")
-      .set("Authorization", "JWT " + invalidRefreshToken);
-    expect(response.statusCode).toBe(401);
-  });
-  
-
- // Remove the commented out test cases if they are not needed anymore
-
-test("Test Logout with missing refresh token", async () => {
-  const response = await request(app)
-    .get("/auth/logout");
-  expect(response.statusCode).toBe(401);
-});
-
-test("Test Logout with invalid refresh token", async () => {
-  const invalidRefreshToken = "invalid_refresh_token";
-  const response = await request(app)
-    .get("/auth/logout")
-    .set("Authorization", "JWT " + invalidRefreshToken);
-  expect(response.statusCode).toBe(401);
-});
-
-  
 });
