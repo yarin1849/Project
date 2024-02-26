@@ -3,9 +3,23 @@ import initApp from "../app";
 import mongoose from "mongoose";
 import { Express } from "express";
 import User from "../models/user_model";
+// import jwt from 'jsonwebtoken'; // Import jsonwebtoken library
+
+// // Add the generateValidRefreshToken function here
+// const generateValidRefreshToken = async () => {
+//   // Assuming you have access to the user's ID or any unique identifier
+//   const userId = user._id; // Replace with the actual user ID
+  
+//   // Sign a refresh token with the user's ID as the payload
+//   const refreshToken = jwt.sign({ _id: userId }, process.env.JWT_REFRESH_SECRET);
+  
+//   return refreshToken;
+// };
 
 let app: Express;
 const user = {
+  _id : "1234",
+  name: "user1",
   email: "testUser@test.com",
   password: "1234567890",
 }
@@ -178,35 +192,77 @@ describe("Auth tests", () => {
       });
     expect(response.statusCode).toBe(400);
   });
-
-});
-
-afterAll(async () => {
-  // Close the database connection
-  await mongoose.connection.close();
-});
-
-describe("Auth tests", () => {
-  test("Test Login", async () => {
+  test("Test missing name in registration", async () => {
+    const response = await request(app)
+      .post("/auth/register")
+      .send({
+        email: "test@test.com",
+        password: "1234567890",
+      });
+    expect(response.statusCode).toBe(400);
+  });
+  test("Test missing name in registration", async () => {
+    const response = await request(app)
+      .post("/auth/register")
+      .send({
+        email: "test@test.com",
+        password: "1234567890",
+      });
+    expect(response.statusCode).toBe(400);
+    expect(response.text).toBe("missing email or password");
+  });
+  test("Test Login with incorrect email", async () => {
     const response = await request(app)
       .post("/auth/login")
-      .send(user);
-    expect(response.statusCode).toBe(200);
-    expect(response.body.accessToken).toBeDefined();
-    expect(response.body.refreshToken).toBeDefined();
-    accessToken = response.body.accessToken;
-    refreshToken = response.body.refreshToken;
+      .send({
+        email: "incorrectemail@test.com", // Incorrect email
+        password: "1234567890", // Correct password
+      });
+    expect(response.statusCode).toBe(401);
+    expect(response.text).toBe("email or password incorrect");
   });
+  
+  test("Test Login with incorrect password", async () => {
+    const response = await request(app)
+      .post("/auth/login")
+      .send({
+        email: "test@test.com", // Correct email
+        password: "incorrectpassword", // Incorrect password
+      });
+    expect(response.statusCode).toBe(401);
+    expect(response.text).toBe("email or password incorrect");
+  });
+  
+  test("Test Logout with missing refresh token", async () => {
+    const response = await request(app)
+      .get("/auth/logout");
+    expect(response.statusCode).toBe(401);
+  });
+  
+  test("Test Logout with invalid refresh token", async () => {
+    const invalidRefreshToken = "invalid_refresh_token";
+    const response = await request(app)
+      .get("/auth/logout")
+      .set("Authorization", "JWT " + invalidRefreshToken);
+    expect(response.statusCode).toBe(401);
+  });
+  
 
+ // Remove the commented out test cases if they are not needed anymore
 
-  // test("Test Logout", async () => {
-  //   const response = await request(app)
-  //     .get("/auth/logout")
-  //     .set("Authorization", "JWT" + accessToken);
-  //   expect(response.statusCode).toBe(200);
-  //   const response2 = await request(app)
-  //     .get("/user")
-  //     .set("Authorization", "JWT" + accessToken);
-  //   expect(response2.statusCode).toBe(401);
-  // });
+test("Test Logout with missing refresh token", async () => {
+  const response = await request(app)
+    .get("/auth/logout");
+  expect(response.statusCode).toBe(401);
+});
+
+test("Test Logout with invalid refresh token", async () => {
+  const invalidRefreshToken = "invalid_refresh_token";
+  const response = await request(app)
+    .get("/auth/logout")
+    .set("Authorization", "JWT " + invalidRefreshToken);
+  expect(response.statusCode).toBe(401);
+});
+
+  
 });

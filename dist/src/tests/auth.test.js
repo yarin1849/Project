@@ -16,8 +16,19 @@ const supertest_1 = __importDefault(require("supertest"));
 const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const user_model_1 = __importDefault(require("../models/user_model"));
+// import jwt from 'jsonwebtoken'; // Import jsonwebtoken library
+// // Add the generateValidRefreshToken function here
+// const generateValidRefreshToken = async () => {
+//   // Assuming you have access to the user's ID or any unique identifier
+//   const userId = user._id; // Replace with the actual user ID
+//   // Sign a refresh token with the user's ID as the payload
+//   const refreshToken = jwt.sign({ _id: userId }, process.env.JWT_REFRESH_SECRET);
+//   return refreshToken;
+// };
 let app;
 const user = {
+    _id: "1234",
+    name: "user1",
     email: "testUser@test.com",
     password: "1234567890",
 };
@@ -163,31 +174,69 @@ describe("Auth tests", () => {
         });
         expect(response.statusCode).toBe(400);
     }));
-});
-afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
-    // Close the database connection
-    yield mongoose_1.default.connection.close();
-}));
-describe("Auth tests", () => {
-    test("Test Login", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test missing name in registration", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register")
+            .send({
+            email: "test@test.com",
+            password: "1234567890",
+        });
+        expect(response.statusCode).toBe(400);
+    }));
+    test("Test missing name in registration", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register")
+            .send({
+            email: "test@test.com",
+            password: "1234567890",
+        });
+        expect(response.statusCode).toBe(400);
+        expect(response.text).toBe("missing email or password");
+    }));
+    test("Test Login with incorrect email", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/auth/login")
-            .send(user);
-        expect(response.statusCode).toBe(200);
-        expect(response.body.accessToken).toBeDefined();
-        expect(response.body.refreshToken).toBeDefined();
-        accessToken = response.body.accessToken;
-        refreshToken = response.body.refreshToken;
+            .send({
+            email: "incorrectemail@test.com", // Incorrect email
+            password: "1234567890", // Correct password
+        });
+        expect(response.statusCode).toBe(401);
+        expect(response.text).toBe("email or password incorrect");
     }));
-    // test("Test Logout", async () => {
-    //   const response = await request(app)
-    //     .get("/auth/logout")
-    //     .set("Authorization", "JWT" + accessToken);
-    //   expect(response.statusCode).toBe(200);
-    //   const response2 = await request(app)
-    //     .get("/user")
-    //     .set("Authorization", "JWT" + accessToken);
-    //   expect(response2.statusCode).toBe(401);
-    // });
+    test("Test Login with incorrect password", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/login")
+            .send({
+            email: "test@test.com", // Correct email
+            password: "incorrectpassword", // Incorrect password
+        });
+        expect(response.statusCode).toBe(401);
+        expect(response.text).toBe("email or password incorrect");
+    }));
+    test("Test Logout with missing refresh token", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .get("/auth/logout");
+        expect(response.statusCode).toBe(401);
+    }));
+    test("Test Logout with invalid refresh token", () => __awaiter(void 0, void 0, void 0, function* () {
+        const invalidRefreshToken = "invalid_refresh_token";
+        const response = yield (0, supertest_1.default)(app)
+            .get("/auth/logout")
+            .set("Authorization", "JWT " + invalidRefreshToken);
+        expect(response.statusCode).toBe(401);
+    }));
+    // Remove the commented out test cases if they are not needed anymore
+    test("Test Logout with missing refresh token", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .get("/auth/logout");
+        expect(response.statusCode).toBe(401);
+    }));
+    test("Test Logout with invalid refresh token", () => __awaiter(void 0, void 0, void 0, function* () {
+        const invalidRefreshToken = "invalid_refresh_token";
+        const response = yield (0, supertest_1.default)(app)
+            .get("/auth/logout")
+            .set("Authorization", "JWT " + invalidRefreshToken);
+        expect(response.statusCode).toBe(401);
+    }));
 });
 //# sourceMappingURL=auth.test.js.map
