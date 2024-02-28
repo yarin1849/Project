@@ -271,15 +271,15 @@ describe("Auth tests", () => {
             .set("Authorization", "JWT " + validRefreshToken);
         expect(response.statusCode).toBe(401);
     }));
-    // test("Test Login with non-existent email", async () => {
-    //   const response = await request(app)
-    //     .post("/auth/login")
-    //     .send({
-    //       email: "nonexistent@test.com",
-    //       password: "1234567890",
-    //     });
-    //   expect(response.statusCode).toBe(401);
-    // });
+    test("Test Login with non-existent email", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/login")
+            .send({
+            email: "nonexistent@test.com",
+            password: "1234567890",
+        });
+        expect(response.statusCode).toBe(401);
+    }));
     test("Test Login with incorrect password", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/auth/login")

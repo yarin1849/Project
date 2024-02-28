@@ -60,20 +60,6 @@ const generateTokens = (user) => __awaiter(void 0, void 0, void 0, function* () 
         refreshToken,
     };
 });
-// const generateTokens = async (user: Document & IUser) => {
-//     const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
-//     const refreshToken = jwt.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET);
-//     if (user.refreshTokens == null) {
-//         user.refreshTokens = [refreshToken];
-//     } else {
-//         user.refreshTokens.push(refreshToken);
-//     }
-//     await user.save();
-//     return {
-//         'accessToken': accessToken,
-//         'refreshToken': refreshToken
-//     };
-// }
 const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const email = req.body.email;
     const password = req.body.password;
