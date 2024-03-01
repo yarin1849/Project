@@ -226,7 +226,6 @@ describe("Auth tests", () => {
             .set("Authorization", "JWT " + invalidRefreshToken);
         expect(response.statusCode).toBe(401);
     }));
-    // Remove the commented out test cases if they are not needed anymore
     test("Test Register missing name", () => __awaiter(void 0, void 0, void 0, function* () {
         const response = yield (0, supertest_1.default)(app)
             .post("/auth/register")
@@ -289,6 +288,18 @@ describe("Auth tests", () => {
         });
         expect(response.statusCode).toBe(401);
         expect(response.text).toBe("email or password incorrect");
+    }));
+    test("Test Register with valid name, email, and password", () => __awaiter(void 0, void 0, void 0, function* () {
+        const response = yield (0, supertest_1.default)(app)
+            .post("/auth/register")
+            .send({
+            name: "John Doe",
+            email: "johndoe@test.com",
+            password: "1234567890",
+        });
+        expect(response.statusCode).toBe(201);
+        expect(response.body).toHaveProperty("accessToken");
+        expect(response.body).toHaveProperty("refreshToken");
     }));
 });
 //# sourceMappingURL=auth.test.js.map

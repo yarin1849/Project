@@ -179,7 +179,7 @@ describe("Post controller tests", () => {
     const getByIdResponse = await request(app).get(`/userpost/${postId}`);
     
     // Assert the status code and the properties of the returned post
-    expect(getByIdResponse.statusCode).toBe(201);
+    expect(getByIdResponse.statusCode).toBe(200);
     expect(getByIdResponse.body.title).toBe(post1.title);
     expect(getByIdResponse.body.message).toBe(post1.message);
     expect(getByIdResponse.body.owner).toBe(user._id);

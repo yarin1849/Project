@@ -167,7 +167,7 @@ describe("Post controller tests", () => {
         // Make a request to retrieve the created post by ID using getById2
         const getByIdResponse = yield (0, supertest_1.default)(app).get(`/userpost/${postId}`);
         // Assert the status code and the properties of the returned post
-        expect(getByIdResponse.statusCode).toBe(201);
+        expect(getByIdResponse.statusCode).toBe(200);
         expect(getByIdResponse.body.title).toBe(post1.title);
         expect(getByIdResponse.body.message).toBe(post1.message);
         expect(getByIdResponse.body.owner).toBe(user._id);

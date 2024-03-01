@@ -249,8 +249,6 @@ describe("Auth tests", () => {
     });
     
 
-  // Remove the commented out test cases if they are not needed anymore
-
   test("Test Register missing name", async () => {
     const response = await request(app)
       .post("/auth/register")
@@ -316,4 +314,19 @@ describe("Auth tests", () => {
     expect(response.text).toBe("email or password incorrect");
 
   });
+
+  test("Test Register with valid name, email, and password", async () => {
+    const response = await request(app)
+      .post("/auth/register")
+      .send({
+        name: "John Doe",
+        email: "johndoe@test.com",
+        password: "1234567890",
+      });
+    expect(response.statusCode).toBe(201);
+    expect(response.body).toHaveProperty("accessToken");
+    expect(response.body).toHaveProperty("refreshToken");
+  });
 });
+
+

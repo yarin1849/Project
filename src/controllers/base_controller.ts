@@ -60,8 +60,11 @@ export class BaseController<ModelType> {
           res.status(500).json({ message: err.message });
       }
     }
+    
 
 }
+
+
 
 const createController = <ModelType>(model: Model<ModelType>) => {
   return new BaseController<ModelType>(model);
