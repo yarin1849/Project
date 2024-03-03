@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -19,29 +10,27 @@ class CommentController extends base_controller_1.BaseController {
     constructor() {
         super(comment_model_1.default);
     }
-    post(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                const userId = req.user._id;
-                const { content, postId } = req.body;
-                const comment1 = yield post_model_1.default.findById(postId);
-                if (!comment1) {
-                    res.status(404).json({ message: "post not found" });
-                    return;
-                }
-                const comment = yield comment_model_1.default.create({
-                    content,
-                    author: userId,
-                    postId: comment1.id,
-                });
-                comment1.comments.push(comment.id);
-                yield comment1.save();
-                res.status(201).json(comment);
+    async post(req, res) {
+        try {
+            const userId = req.user._id;
+            const { content, postId } = req.body;
+            const comment1 = await post_model_1.default.findById(postId);
+            if (!comment1) {
+                res.status(404).json({ message: "post not found" });
+                return;
             }
-            catch (error) {
-                res.status(500).json({ message: "Internal Server Error" });
-            }
-        });
+            const comment = await comment_model_1.default.create({
+                content,
+                author: userId,
+                postId: comment1.id,
+            });
+            comment1.comments.push(comment.id);
+            await comment1.save();
+            res.status(201).json(comment);
+        }
+        catch (error) {
+            res.status(500).json({ message: "Internal Server Error" });
+        }
     }
 }
 exports.default = new CommentController();

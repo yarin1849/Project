@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -15,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const user_model_1 = __importDefault(require("../models/user_model"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const register = async (req, res) => {
     const name = req.body.name;
     const email = req.body.email;
     const password = req.body.password;
@@ -24,26 +15,26 @@ const register = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(400).send("missing email or password");
     }
     try {
-        const rs = yield user_model_1.default.findOne({ 'email': email });
+        const rs = await user_model_1.default.findOne({ 'email': email });
         if (rs != null) {
             return res.status(406).send("email already exists");
         }
-        const salt = yield bcrypt_1.default.genSalt(10);
-        const encryptedPassword = yield bcrypt_1.default.hash(password, salt);
-        const rs2 = yield user_model_1.default.create({
+        const salt = await bcrypt_1.default.genSalt(10);
+        const encryptedPassword = await bcrypt_1.default.hash(password, salt);
+        const rs2 = await user_model_1.default.create({
             'name': name,
             'email': email,
             'password': encryptedPassword,
             'imgUrl': imgUrl
         });
-        const tokens = yield generateTokens(rs2);
+        const tokens = await generateTokens(rs2);
         res.status(201).send(Object.assign({ name: rs2.name, email: rs2.email, _id: rs2._id, imgUrl: rs2.imgUrl }, tokens));
     }
     catch (err) {
         return res.status(400).send("error missing email or password");
     }
-});
-const generateTokens = (user) => __awaiter(void 0, void 0, void 0, function* () {
+};
+const generateTokens = async (user) => {
     const accessToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRATION,
     });
@@ -54,83 +45,83 @@ const generateTokens = (user) => __awaiter(void 0, void 0, void 0, function* () 
     else if (!user.refreshTokens.includes(refreshToken)) {
         user.refreshTokens.push(refreshToken);
     }
-    yield user.save();
+    await user.save();
     return {
         accessToken,
         refreshToken,
     };
-});
-const login = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+};
+const login = async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     if (!email || !password) {
         return res.status(400).send("missing email or password");
     }
     try {
-        const user = yield user_model_1.default.findOne({ 'email': email });
+        const user = await user_model_1.default.findOne({ 'email': email });
         if (user == null) {
             return res.status(401).send("email or password incorrect");
         }
-        const match = yield bcrypt_1.default.compare(password, user.password);
+        const match = await bcrypt_1.default.compare(password, user.password);
         if (!match) {
             return res.status(401).send("email or password incorrect");
         }
-        const tokens = yield generateTokens(user);
+        const tokens = await generateTokens(user);
         return res.status(200).send(tokens);
     }
     catch (err) {
         return res.status(400).send("error missing email or password");
     }
-});
-const logout = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+};
+const logout = async (req, res) => {
     const authHeader = req.headers['authorization'];
     const refreshToken = authHeader && authHeader.split(' ')[1]; // Bearer <token>
     if (refreshToken == null)
         return res.sendStatus(401);
-    jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => __awaiter(void 0, void 0, void 0, function* () {
+    jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user) => {
         console.log(err);
         if (err)
             return res.sendStatus(401);
         try {
-            const userDb = yield user_model_1.default.findOne({ '_id': user._id });
+            const userDb = await user_model_1.default.findOne({ '_id': user._id });
             if (!userDb.refreshTokens || !userDb.refreshTokens.includes(refreshToken)) {
                 userDb.refreshTokens = [];
-                yield userDb.save();
+                await userDb.save();
                 return res.status(401).send("Invalid refresh token");
             }
             else {
                 userDb.refreshTokens = userDb.refreshTokens.filter(t => t !== refreshToken);
-                yield userDb.save();
+                await userDb.save();
                 return res.sendStatus(200);
             }
         }
         catch (err) {
             res.status(400).send(err.message);
         }
-    }));
-});
-const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    });
+};
+const refresh = async (req, res) => {
     const authHeader = req.headers['authorization'];
     const refreshToken = authHeader && authHeader.split(' ')[1]; // Bearer <token>
     if (refreshToken == null)
         return res.sendStatus(401);
-    jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET, (err, user) => __awaiter(void 0, void 0, void 0, function* () {
+    jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user) => {
         if (err) {
             console.log(err);
             return res.sendStatus(401);
         }
         try {
-            const userDb = yield user_model_1.default.findOne({ '_id': user._id });
+            const userDb = await user_model_1.default.findOne({ '_id': user._id });
             if (!userDb.refreshTokens || !userDb.refreshTokens.includes(refreshToken)) {
                 userDb.refreshTokens = [];
-                yield userDb.save();
+                await userDb.save();
                 return res.sendStatus(401);
             }
             const accessToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
             const newRefreshToken = jsonwebtoken_1.default.sign({ _id: user._id }, process.env.JWT_REFRESH_SECRET);
             userDb.refreshTokens = userDb.refreshTokens.filter(t => t !== refreshToken);
             userDb.refreshTokens.push(newRefreshToken);
-            yield userDb.save();
+            await userDb.save();
             return res.status(200).send({
                 'accessToken': accessToken,
                 'refreshToken': newRefreshToken // Use the new refresh token here
@@ -139,8 +130,8 @@ const refresh = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         catch (err) {
             return res.status(401).send(err.message); // Return the error response properly
         }
-    }));
-});
+    });
+};
 exports.default = {
     register,
     login,

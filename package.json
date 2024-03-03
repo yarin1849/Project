@@ -8,6 +8,8 @@
     "testAuth": "tsc && jest --detectOpenHandles --forceExit ./src/tests/auth.test.ts",
     "testPost": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/post.test.ts",
     "testUser": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/user.test.ts",
+    "testComment": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/comment.test.ts",
+    "testReview": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/review.test.ts",
     "start": "tsc && node ./dist/src/server.js",
     "dev": "nodemon ./src/server.ts"
   },

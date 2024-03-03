@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -19,29 +10,27 @@ class PostController extends base_controller_1.BaseController {
     constructor() {
         super(post_model_1.default);
     }
-    get(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            console.log("Get all Posts: ");
-            try {
-                const posts = yield post_model_1.default.find()
-                    .select([
-                    "title",
-                    "message",
-                    "owner",
-                    "_id",
-                    "comments",
-                    "postImg",
-                ])
-                    .populate([{ path: "owner", select: "name imgUrl" }])
-                    .sort({ timeStamp: -1 });
-                const detailedPosts = posts
-                    .map((post) => post.toObject());
-                res.send(detailedPosts);
-            }
-            catch (err) {
-                res.status(500).json({ message: err.message });
-            }
-        });
+    async get(req, res) {
+        console.log("Get all Posts: ");
+        try {
+            const posts = await post_model_1.default.find()
+                .select([
+                "title",
+                "message",
+                "owner",
+                "_id",
+                "comments",
+                "postImg",
+            ])
+                .populate([{ path: "owner", select: "name imgUrl" }])
+                .sort({ timeStamp: -1 });
+            const detailedPosts = posts
+                .map((post) => post.toObject());
+            res.send(detailedPosts);
+        }
+        catch (err) {
+            res.status(500).json({ message: err.message });
+        }
     }
     // async getById2(req: AuthRequest, res: Response) {
     //     console.log("Get Post by Id:" + req.params.id);
@@ -63,39 +52,24 @@ class PostController extends base_controller_1.BaseController {
     //         return res.status(500).json({ message: "Internal server error" }); // Send a generic error message
     //     }
     // }
-    post(req, res) {
-        const _super = Object.create(null, {
-            post: { get: () => super.post }
-        });
-        return __awaiter(this, void 0, void 0, function* () {
-            console.log("Post: " + req.body);
-            const userId = req.user._id;
-            req.body.author = userId;
-            _super.post.call(this, req, res);
-        });
+    async post(req, res) {
+        console.log("Post: " + req.body);
+        const userId = req.user._id;
+        req.body.author = userId;
+        super.post(req, res);
     }
-    putById(req, res) {
-        const _super = Object.create(null, {
-            putById: { get: () => super.putById }
-        });
-        return __awaiter(this, void 0, void 0, function* () {
-            console.log("Put Post by Id:" + req.params.id);
-            _super.putById.call(this, req, res);
-        });
+    async putById(req, res) {
+        console.log("Put Post by Id:" + req.params.id);
+        super.putById(req, res);
     }
-    deleteById2(req, res) {
-        const _super = Object.create(null, {
-            deleteById: { get: () => super.deleteById }
-        });
-        return __awaiter(this, void 0, void 0, function* () {
-            // try {
-            //     await Comment.deleteMany({ postId: req.params.id });
-            // } catch (error) {
-            //     res.status(500).json({ message: "Could not delete " });
-            // }
-            // console.log("Delete Post by Id:" + req.params.id);
-            _super.deleteById.call(this, req, res);
-        });
+    async deleteById2(req, res) {
+        // try {
+        //     await Comment.deleteMany({ postId: req.params.id });
+        // } catch (error) {
+        //     res.status(500).json({ message: "Could not delete " });
+        // }
+        // console.log("Delete Post by Id:" + req.params.id);
+        super.deleteById(req, res);
     }
 }
 exports.default = new PostController();

@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -21,20 +12,20 @@ let app;
 let accessToken = "";
 let user;
 let post1;
-beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
-    app = yield (0, app_1.default)();
+beforeAll(async () => {
+    app = await (0, app_1.default)();
     console.log("beforeAll");
-    yield post_model_1.default.deleteMany();
-    yield user_model_1.default.deleteMany({ 'email': 'test@.post.test' });
+    await post_model_1.default.deleteMany();
+    await user_model_1.default.deleteMany({ 'email': 'test@.post.test' });
     // Register a user
-    const registerResponse = yield (0, supertest_1.default)(app).post("/auth/register").send({
+    const registerResponse = await (0, supertest_1.default)(app).post("/auth/register").send({
         name: "bla",
         email: "test@.post.test",
         password: "1234567890",
     });
     user = registerResponse.body;
     // Login to get the access token
-    const loginResponse = yield (0, supertest_1.default)(app).post("/auth/login").send({
+    const loginResponse = await (0, supertest_1.default)(app).post("/auth/login").send({
         email: user.email,
         password: "1234567890",
     });
@@ -47,18 +38,18 @@ beforeAll(() => __awaiter(void 0, void 0, void 0, function* () {
         owner: user._id,
         postImg: "postImg1",
     };
-}));
-afterAll(() => __awaiter(void 0, void 0, void 0, function* () {
-    yield mongoose_1.default.connection.close();
-}));
+});
+afterAll(async () => {
+    await mongoose_1.default.connection.close();
+});
 describe("Post controller tests", () => {
-    test("Test Get All  posts - empty response", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/userpost");
+    test("Test Get All  posts - empty response", async () => {
+        const response = await (0, supertest_1.default)(app).get("/userpost");
         expect(response.statusCode).toBe(200);
         expect(response.body).toStrictEqual([]);
-    }));
-    test("Test Post", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app)
+    });
+    test("Test Post", async () => {
+        const response = await (0, supertest_1.default)(app)
             .post("/userpost")
             .set("Authorization", "JWT " + accessToken)
             .send(post1);
@@ -66,16 +57,16 @@ describe("Post controller tests", () => {
         expect(response.body.owner).toBe(user._id);
         expect(response.body.title).toBe(post1.title);
         expect(response.body.message).toBe(post1.message);
-    }));
-    test("Test Get All user posts with one post in DB", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).get("/userpost");
+    });
+    test("Test Get All user posts with one post in DB", async () => {
+        const response = await (0, supertest_1.default)(app).get("/userpost");
         expect(response.statusCode).toBe(200);
         const rc = response.body[0];
         expect(rc.title).toBe(post1.title);
         expect(rc.message).toBe(post1.message);
         expect(rc.owner).toBe(user._id);
-    }));
-    test("Test PUT /userpost/:id", () => __awaiter(void 0, void 0, void 0, function* () {
+    });
+    test("Test PUT /userpost/:id", async () => {
         const updatedPost = {
             comments: [],
             title: "updatedTitle",
@@ -83,7 +74,7 @@ describe("Post controller tests", () => {
             owner: user._id,
             postImg: "postImg1",
         };
-        const response = yield (0, supertest_1.default)(app)
+        const response = await (0, supertest_1.default)(app)
             .put(`/userpost/${post1._id}`)
             .set("Authorization", "JWT " + accessToken)
             .send(updatedPost);
@@ -91,13 +82,13 @@ describe("Post controller tests", () => {
         expect(response.body.title).toBe(updatedPost.title);
         expect(response.body.message).toBe(updatedPost.message);
         expect(response.body.owner).toBe(user._id);
-    }));
-    test("Test DELETE /userpost/:id", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app).delete(`/userpost/${post1._id}`)
+    });
+    test("Test DELETE /userpost/:id", async () => {
+        const response = await (0, supertest_1.default)(app).delete(`/userpost/${post1._id}`)
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(200);
-    }));
-    test("Test Get All  posts - existing posts", () => __awaiter(void 0, void 0, void 0, function* () {
+    });
+    test("Test Get All  posts - existing posts", async () => {
         // Create some posts
         const post2 = {
             title: "title2",
@@ -109,35 +100,35 @@ describe("Post controller tests", () => {
             message: "message3",
             owner: user._id,
         };
-        yield (0, supertest_1.default)(app)
+        await (0, supertest_1.default)(app)
             .post("/userpost")
             .set("Authorization", "JWT " + accessToken)
             .send(post2);
-        yield (0, supertest_1.default)(app)
+        await (0, supertest_1.default)(app)
             .post("/userpost")
             .set("Authorization", "JWT " + accessToken)
             .send(post3);
-        const response = yield (0, supertest_1.default)(app).get("/userpost");
+        const response = await (0, supertest_1.default)(app).get("/userpost");
         expect(response.statusCode).toBe(200);
         // expect(response.body.length).toBe(3); // Expecting 3 posts including the previously created post1
-    }));
-    test("Test Get User post by ID", () => __awaiter(void 0, void 0, void 0, function* () {
+    });
+    test("Test Get User post by ID", async () => {
         // First, create a post
-        const response = yield (0, supertest_1.default)(app)
+        const response = await (0, supertest_1.default)(app)
             .post("/userpost")
             .set("Authorization", "JWT " + accessToken)
             .send(post1);
         expect(response.statusCode).toBe(201);
         // Then, retrieve the created post by ID
         const createdPostId = response.body._id;
-        const getByIdResponse = yield (0, supertest_1.default)(app).get(`/userpost/${createdPostId}`);
+        const getByIdResponse = await (0, supertest_1.default)(app).get(`/userpost/${createdPostId}`);
         expect(getByIdResponse.statusCode).toBe(200);
         expect(getByIdResponse.body.title).toBe(post1.title);
         expect(getByIdResponse.body.message).toBe(post1.message);
         expect(getByIdResponse.body.owner).toBe(user._id);
-    }));
-    test("Test Post", () => __awaiter(void 0, void 0, void 0, function* () {
-        const response = yield (0, supertest_1.default)(app)
+    });
+    test("Test Post", async () => {
+        const response = await (0, supertest_1.default)(app)
             .post("/userpost")
             .set("Authorization", "JWT " + accessToken)
             .send(post1);
@@ -145,7 +136,7 @@ describe("Post controller tests", () => {
         expect(response.body.owner).toBe(user._id);
         expect(response.body.title).toBe(post1.title);
         expect(response.body.message).toBe(post1.message);
-    }));
+    });
     // test("Test Get Post by ID", async () => {
     //   // Make a request to get the post by ID
     //   const response = await request(app).get(`/userpost/${post1._id}`).set("Authorization", "JWT " + accessToken);
@@ -155,9 +146,9 @@ describe("Post controller tests", () => {
     //   expect(response.body.message).toBe(post1.message);
     //   expect(response.body.owner).toBe(user._id);
     // });
-    test("Test Get Post by ID - Post Found", () => __awaiter(void 0, void 0, void 0, function* () {
+    test("Test Get Post by ID - Post Found", async () => {
         // Make a request to create a post
-        const postResponse = yield (0, supertest_1.default)(app)
+        const postResponse = await (0, supertest_1.default)(app)
             .post("/userpost")
             .set("Authorization", "JWT " + accessToken)
             .send(post1);
@@ -165,16 +156,16 @@ describe("Post controller tests", () => {
         // Extract the created post ID
         const postId = postResponse.body._id;
         // Make a request to retrieve the created post by ID using getById2
-        const getByIdResponse = yield (0, supertest_1.default)(app).get(`/userpost/${postId}`);
+        const getByIdResponse = await (0, supertest_1.default)(app).get(`/userpost/${postId}`);
         // Assert the status code and the properties of the returned post
         expect(getByIdResponse.statusCode).toBe(200);
         expect(getByIdResponse.body.title).toBe(post1.title);
         expect(getByIdResponse.body.message).toBe(post1.message);
         expect(getByIdResponse.body.owner).toBe(user._id);
-    }));
-    test("Test Delete Post by ID - Post Found", () => __awaiter(void 0, void 0, void 0, function* () {
+    });
+    test("Test Delete Post by ID - Post Found", async () => {
         // Make a request to create a post
-        const postResponse = yield (0, supertest_1.default)(app)
+        const postResponse = await (0, supertest_1.default)(app)
             .post("/userpost")
             .set("Authorization", "JWT " + accessToken)
             .send(post1);
@@ -182,11 +173,11 @@ describe("Post controller tests", () => {
         // Extract the created post ID
         const postId = postResponse.body._id;
         // Make a request to delete the created post by ID
-        const deleteResponse = yield (0, supertest_1.default)(app).delete(`/userpost/${postId}`)
+        const deleteResponse = await (0, supertest_1.default)(app).delete(`/userpost/${postId}`)
             .set("Authorization", "JWT " + accessToken);
         // Assert the status code and the response body
         expect(deleteResponse.statusCode).toBe(200);
         expect(deleteResponse.body._id).toBe(postId);
-    }));
+    });
 });
 //# sourceMappingURL=post.test.js.map

@@ -131,5 +131,22 @@ router.get("/logout", auth_controller_1.default.logout);
 *         description: refresh token completed successfully
 */
 router.get("/refresh", auth_controller_1.default.refresh);
+/**
+ * @swagger
+ * /auth/verify:
+ *  get:
+ *   summary: verify token
+ *  tags: [Auth]
+ * description: need to provide the refresh token in the auth header
+ * security:
+ * - bearerAuth: []
+ * responses:
+ * 200:
+ * description: token is valid
+ * 401:
+ * description: token is invalid
+ * 403:
+ * description: token is expired
+ */
 exports.default = router;
 //# sourceMappingURL=auth_route.js.map
