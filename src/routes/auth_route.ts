@@ -135,4 +135,22 @@ router.get("/logout", authController.logout);
 */
 router.get("/refresh", authController.refresh);
 
+/**
+ * @swagger
+ * /auth/verify:
+ *  get:
+ *   summary: verify token
+ *  tags: [Auth]
+ * description: need to provide the refresh token in the auth header
+ * security:
+ * - bearerAuth: []
+ * responses:
+ * 200:
+ * description: token is valid
+ * 401:
+ * description: token is invalid
+ * 403:
+ * description: token is expired
+ */
+
 export default router;
