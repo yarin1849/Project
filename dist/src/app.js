@@ -34,7 +34,7 @@ const initApp = () => {
             app.use("/user", user_route_1.default);
             app.use("/userpost", post_route_1.default);
             app.use("/auth", auth_route_1.default);
-            app.use("/comment", comment_route_1.default);
+            app.use("/comments", comment_route_1.default);
             app.use("/public", express_1.default.static("public"));
             resolve(app);
         });
