@@ -149,6 +149,6 @@ router.put("/:id", auth_middleware_1.default, post_controller_1.default.putById.
 *       404:
 *         description:  post not found
 */
-router.delete("/:id", auth_middleware_1.default, post_controller_1.default.deleteById2.bind(post_controller_1.default));
+router.delete("/:id", auth_middleware_1.default, post_controller_1.default.deleteById.bind(post_controller_1.default));
 exports.default = router;
 //# sourceMappingURL=post_route.js.map

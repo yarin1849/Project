@@ -4,7 +4,7 @@ export interface IPost {
   title: string;
   message: string;
   owner?: string;
-  _id?: number;
+  _id?: ObjectId;
   comments: ObjectId[];
   postImg: string;
 }

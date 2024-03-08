@@ -153,6 +153,6 @@ router.put("/:id", authMiddleware, PostController.putById.bind(PostController));
 *         description:  post not found
 */
 
-router.delete("/:id", authMiddleware, PostController.deleteById2.bind(PostController));
+router.delete("/:id", authMiddleware, PostController.deleteById.bind(PostController));
 
 export default router;

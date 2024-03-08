@@ -83,6 +83,7 @@ router.get("/:id", auth_middleware_1.default, user_controller_1.default.getById.
  * description: User not found
  */
 router.post("/", auth_middleware_1.default, user_controller_1.default.post.bind(user_controller_1.default));
+router.post("/:id", auth_middleware_1.default, user_controller_1.default.post.bind(user_controller_1.default));
 /**
  * @swagger
  * /users:
@@ -176,7 +177,7 @@ router.put("/:id", auth_middleware_1.default, user_controller_1.default.putById2
  * 403:
  * description: Forbidden
  */
-router.put("/:id", auth_middleware_1.default, user_controller_1.default.putById2.bind(user_controller_1.default));
+router.put("/:id", auth_middleware_1.default, user_controller_1.default.putById.bind(user_controller_1.default));
 /**
  * @swagger
  * /users/{id}:

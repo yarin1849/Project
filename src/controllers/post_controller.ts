@@ -31,6 +31,7 @@ class PostController extends BaseController<IPost> {
             res.status(500).json({ message: err.message });
         }
     }
+    
     // async getById2(req: AuthRequest, res: Response) {
     //     console.log("Get Post by Id:" + req.params.id);
     //     try {
@@ -61,21 +62,21 @@ class PostController extends BaseController<IPost> {
         super.post(req, res);
     }
 
-    async putById(req: AuthRequest, res: Response) {
-        console.log("Put Post by Id:" + req.params.id);
-        super.putById(req, res);
-    }
+    // async putById(req: AuthRequest, res: Response) {
+    //     console.log("Put Post by Id:" + req.params.id);
+    //     super.putById(req, res);
+    // }
 
-    async deleteById2(req: AuthRequest, res: Response) {
-        // try {
-        //     await Comment.deleteMany({ postId: req.params.id });
-        // } catch (error) {
-        //     res.status(500).json({ message: "Could not delete " });
-        // }
-        // console.log("Delete Post by Id:" + req.params.id);
-        super.deleteById(req, res);
-        }
-    }
-
+    // async deleteById2(req: AuthRequest, res: Response) {
+    //     // try {
+    //     //     await Comment.deleteMany({ postId: req.params.id });
+    //     // } catch (error) {
+    //     //     res.status(500).json({ message: "Could not delete " });
+    //     // }
+    //     // console.log("Delete Post by Id:" + req.params.id);
+    //     super.deleteById(req, res);
+    //     }
+    // }
+}
 
 export default new PostController();

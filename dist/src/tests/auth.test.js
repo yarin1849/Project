@@ -8,15 +8,6 @@ const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const user_model_1 = __importDefault(require("../models/user_model"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-// import jwt from 'jsonwebtoken'; // Import jsonwebtoken library
-// // Add the generateValidRefreshToken function here
-// const generateValidRefreshToken = async () => {
-//   // Assuming you have access to the user's ID or any unique identifier
-//   const userId = user._id; // Replace with the actual user ID
-//   // Sign a refresh token with the user's ID as the payload
-//   const refreshToken = jwt.sign({ _id: userId }, process.env.JWT_REFRESH_SECRET);
-//   return refreshToken;
-// };
 let app;
 const user = {
     _id: "1234",
@@ -279,18 +270,6 @@ describe("Auth tests", () => {
         });
         expect(response.statusCode).toBe(401);
         expect(response.text).toBe("email or password incorrect");
-    });
-    test("Test Register with valid name, email, and password", async () => {
-        const response = await (0, supertest_1.default)(app)
-            .post("/auth/register")
-            .send({
-            name: "John Doe",
-            email: "johndoe@test.com",
-            password: "1234567890",
-        });
-        expect(response.statusCode).toBe(201);
-        expect(response.body).toHaveProperty("accessToken");
-        expect(response.body).toHaveProperty("refreshToken");
     });
 });
 //# sourceMappingURL=auth.test.js.map

@@ -85,6 +85,8 @@ router.get("/:id", authMiddleware, UserController.getById.bind(UserController));
 
 
 router.post("/", authMiddleware, UserController.post.bind(UserController));
+router.post("/:id", authMiddleware, UserController.post.bind(UserController));
+
 /**
  * @swagger
  * /users:
@@ -181,7 +183,7 @@ router.put("/:id", authMiddleware, UserController.putById2.bind(UserController))
  * 403:
  * description: Forbidden
  */
-router.put("/:id", authMiddleware, UserController.putById2.bind(UserController));
+router.put("/:id", authMiddleware, UserController.putById.bind(UserController));
 
 /**
  * @swagger

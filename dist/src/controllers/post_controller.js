@@ -58,19 +58,6 @@ class PostController extends base_controller_1.BaseController {
         req.body.author = userId;
         super.post(req, res);
     }
-    async putById(req, res) {
-        console.log("Put Post by Id:" + req.params.id);
-        super.putById(req, res);
-    }
-    async deleteById2(req, res) {
-        // try {
-        //     await Comment.deleteMany({ postId: req.params.id });
-        // } catch (error) {
-        //     res.status(500).json({ message: "Could not delete " });
-        // }
-        // console.log("Delete Post by Id:" + req.params.id);
-        super.deleteById(req, res);
-    }
 }
 exports.default = new PostController();
 //# sourceMappingURL=post_controller.js.map

@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/controllers/post_controller.ts</title>
+    <title>Code coverage report for src/routes/comment_route.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/controllers</a> post_controller.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/routes</a> comment_route.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.33% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>14/15</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.33% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>14/15</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -145,18 +145,9 @@
 <a name='L80'></a><a href='#L80'>80</a>
 <a name='L81'></a><a href='#L81'>81</a>
 <a name='L82'></a><a href='#L82'>82</a>
-<a name='L83'></a><a href='#L83'>83</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a>
+<a name='L85'></a><a href='#L85'>85</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -170,12 +161,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -202,11 +187,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -227,89 +214,108 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import Post, { IPost } from "../models/post_model";
-//import Comment from "../models/comment_model";
-import { BaseController } from "./base_controller";
-import { Response } from "express";
-import { AuthRequest } from "../common/auth_middleware";
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span></td><td class="text"><pre class="prettyprint lang-js">import express from "express";
+const router = express.Router();
+import CommentController from "../controllers/comment_controller";
+import authMiddleware from "../common/auth_middleware";
 &nbsp;
-class PostController extends BaseController&lt;IPost&gt; {
-    constructor() {
-        super(Post);
-    }
+/**
+ * @swagger
+ * tags:
+ *   name: Comments
+ *   description: The Comments API
+ */
 &nbsp;
-    async get(req: AuthRequest, res: Response) {
-        console.log("Get all Posts: ");
-        try {
-            const posts = await Post.find()
-            .select([
-                "title",
-                "message",
-                "owner",
-                "_id",
-                "comments",
-                "postImg",
-            ])
-            .populate([{ path: "owner", select: "name imgUrl" }])
-            .sort({ timeStamp: -1 });
-            const detailedPosts = posts
-            .map((post) =&gt; post.toObject());
-    
-            res.send(detailedPosts);
-        } catch (err) {
-<span class="cstat-no" title="statement not covered" >            res.status(500).json({ message: err.message });</span>
-        }
-    }
-    
-    // async getById2(req: AuthRequest, res: Response) {
-    //     console.log("Get Post by Id:" + req.params.id);
-    //     try {
-    //         const post = await Post.findById(req.params.id)
-    //             .populate([{ path: "owner", select: "name imgUrl" }])
-    //             .populate({
-    //                 path: "comments",
-    //                 select: "description owner",
-    //                 populate: { path: "owner", select: "name imgUrl" },
-    //             });
-    //         if (!post) {
-    //             return res.status(404).json({ message: "Post not found" }); // Return early if post is not found
-    //         }
-    //         console.log(post);
-    //         return res.status(201).send(post); // Send the post if found
-    //     } catch (error) {
-    //         console.error(error);
-    //         return res.status(500).json({ message: "Internal server error" }); // Send a generic error message
-    //     }
-    // }
-    
+/**
+ * @swagger
+ * components:
+ *   schemas:
+ *      Comment:
+ *        type: object
+ *        properties:
+ *          description:
+ *            type: string
+ *            description: The comment description
+ *          author:
+ *             type: string
+ *             description: The comment's author id
+ *          reviewId:
+ *            type: string
+ *            description: The comment reviewId
+ *          timeStamp:
+ *            type: string
+ *            description: The comment upload time
+ *        example:
+ *          description: 'This is a great movie'
+ *          author: '123456'
+ *          reviewId: '123456'
+ *          timeStamp: '2024-01-01T00:00:00.000Z'
+ */
 &nbsp;
-    async post(req: AuthRequest, res: Response) {
-        console.log("Post: " + req.body);
-        const userId = req.user._id;
-        req.body.author = userId;
+/**
+ * @swagger
+ * /comments:
+ *   post:
+ *     summary: Create a new comment
+ *     tags: [Comments]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Comment'
+ *     responses:
+ *       200:
+ *         description: The comment was successfully created
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Comment'
+ *       400:
+ *         description: Some parameters are missing or invalid
+ *       401:
+ *         description: Unauthorized, user needs to be signed in
+ *       500:
+ *         description: Unexpected error
+ */
+router.get("/:id", CommentController.getById.bind(CommentController));
 &nbsp;
-        super.post(req, res);
-    }
+router.delete("/:id", CommentController.getById.bind(CommentController));
 &nbsp;
-    // async putById(req: AuthRequest, res: Response) {
-    //     console.log("Put Post by Id:" + req.params.id);
-    //     super.putById(req, res);
-    // }
+router.delete("/:postId", CommentController.getById.bind(CommentController));
 &nbsp;
-    // async deleteById2(req: AuthRequest, res: Response) {
-    //     // try {
-    //     //     await Comment.deleteMany({ postId: req.params.id });
-    //     // } catch (error) {
-    //     //     res.status(500).json({ message: "Could not delete " });
-    //     // }
-    //     // console.log("Delete Post by Id:" + req.params.id);
-    //     super.deleteById(req, res);
-    //     }
-    // }
-}
+router.post(
+  "/",
+  authMiddleware,
+  CommentController.post.bind(CommentController)
+);
 &nbsp;
-export default new PostController();
-&nbsp;</pre></td></tr></table></pre>
+router.get(
+  "/:postId",
+  authMiddleware,
+  CommentController.getById.bind(CommentController)
+);
+&nbsp;
+export default router;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->

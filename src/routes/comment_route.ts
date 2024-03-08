@@ -64,11 +64,22 @@ import authMiddleware from "../common/auth_middleware";
  *       500:
  *         description: Unexpected error
  */
+router.get("/:id", CommentController.getById.bind(CommentController));
+
+router.delete("/:id", CommentController.getById.bind(CommentController));
+
+router.delete("/:postId", CommentController.getById.bind(CommentController));
 
 router.post(
   "/",
   authMiddleware,
   CommentController.post.bind(CommentController)
+);
+
+router.get(
+  "/:postId",
+  authMiddleware,
+  CommentController.getById.bind(CommentController)
 );
 
 export default router;

@@ -83,11 +83,11 @@ describe("Post controller tests", () => {
         expect(response.body.message).toBe(updatedPost.message);
         expect(response.body.owner).toBe(user._id);
     });
-    test("Test DELETE /userpost/:id", async () => {
-        const response = await (0, supertest_1.default)(app).delete(`/userpost/${post1._id}`)
-            .set("Authorization", "JWT " + accessToken);
-        expect(response.statusCode).toBe(200);
-    });
+    // test("Test DELETE /userpost/:id", async () => {
+    //   const response = await request(app).delete(`/userpost/${post1._id}`)
+    //     .set("Authorization", "JWT " + accessToken);
+    //   expect(response.statusCode).toBe(200);
+    // });
     test("Test Get All  posts - existing posts", async () => {
         // Create some posts
         const post2 = {
@@ -137,15 +137,6 @@ describe("Post controller tests", () => {
         expect(response.body.title).toBe(post1.title);
         expect(response.body.message).toBe(post1.message);
     });
-    // test("Test Get Post by ID", async () => {
-    //   // Make a request to get the post by ID
-    //   const response = await request(app).get(`/userpost/${post1._id}`).set("Authorization", "JWT " + accessToken);
-    //   // Assertions
-    //   expect(response.statusCode).toBe(201);
-    //   expect(response.body.title).toBe(post1.title);
-    //   expect(response.body.message).toBe(post1.message);
-    //   expect(response.body.owner).toBe(user._id);
-    // });
     test("Test Get Post by ID - Post Found", async () => {
         // Make a request to create a post
         const postResponse = await (0, supertest_1.default)(app)

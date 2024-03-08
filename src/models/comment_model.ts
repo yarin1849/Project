@@ -1,10 +1,10 @@
 import mongoose, { ObjectId } from "mongoose";
 
 export interface IComment {
-  _id?: ObjectId;
+  _id?: string;
   owner: string;
   content: string;
-  postId?: ObjectId;
+  postId: ObjectId;
   createdAt: Date;
 }
 

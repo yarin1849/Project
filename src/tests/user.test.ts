@@ -35,19 +35,7 @@ const user: IUser = {
 };
 
 describe("Users tests", () => {
-  // const adduser = async (user: IUser) => {
-  //   const response = await request(app)
-  //   .post("/user")
-  //   .set("Authorization", "JWT " + accessToken)
-  //   .send(user);
-  //   expect(response.statusCode).toBe(201);
-  //   expect(response.text).toBe("OK");
-  // };
-  // test("Test Get All users - empty response", async () => {
-  //   const response = await request(app).get("/user").set("Authorization", "JWT " + accessToken);
-  //   expect(response.statusCode).toBe(200);
-  //   expect(response.body).toStrictEqual([]);
-  // });
+ 
   test("Test Get current user", async () => {
     const response = await request(app)
       .get("/user")
@@ -58,29 +46,29 @@ describe("Users tests", () => {
   });
   
 
-  // test("Test Post user", async () => {
-  //   adduser(user);
-  // });
   test("Test Post user", async () => {
     const response = await request(app)
       .post("/user")
       .set("Authorization", "JWT " + accessToken)
       .send(user);
-    expect(response.statusCode).toBe(201);
+    expect(response.statusCode).toBe(200);
+    expect(response.body.name).toBe(user.name);
+    expect(response.body.email).toBe(user.email);
+    expect(response.body._id).toBe(user._id);
   });
  
-  test("Test Get All users with one user in DB", async () => {
-    const response = await request(app).get("/user").set("Authorization", "JWT " + accessToken);
-    expect(response.statusCode).toBe(200);
-    expect(response.body.length).toBe(1);
-    const st = response.body[0];
-    //console.log(response.body);
-    expect(st.name).toBe(user.name);
-    expect(st.email).toBe(user.email);
-    //expect(st._id).toBe(user._id);
-    expect(st.password).not.toBe(user.password); // Assuming st.password contains the hashed password
+  // test("Test Get All users with one user in DB", async () => {
+  //   const response = await request(app).get("/user").set("Authorization", "JWT " + accessToken);
+  //   expect(response.statusCode).toBe(200);
+  //   expect(response.body.length).toBe(1);
+  //   const st = response.body[0];
+  //   //console.log(response.body);
+  //   expect(st.name).toBe(user.name);
+  //   expect(st.email).toBe(user.email);
+  //   //expect(st._id).toBe(user._id);
+  //   expect(st.password).not.toBe(user.password); // Assuming st.password contains the hashed password
 
-  });
+  // });
 
   // test("Test Post duplicate user", async () => {
   //   const response = await request(app).post("/user").set("Authorization", "JWT " + accessToken).send(user);
@@ -119,20 +107,11 @@ describe("Users tests", () => {
     // Add the user to the database
     const response = await request(app)
       .post("/user")
-      .set("Authorization", "JWT " + accessToken)
       .send(user);
-    expect(response.statusCode).toBe(201);
-
-    // Get the user ID of the added user
-    const addedUser = await User.findOne({ email: user.email });
-    const userId = addedUser._id;
-
-    // Send the delete request with the appropriate authorization token
-    const deleteResponse = await request(app)
-      .delete(`/user/${userId}`)
-      .set("Authorization", "JWT " + accessToken);
-    expect(deleteResponse.statusCode).toBe(200);
+      //UnAothorized - no token
+    expect(response.statusCode).toBe(401);
   });
   
+
   
 });

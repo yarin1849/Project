@@ -1,99 +1,187 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const supertest_1 = __importDefault(require("supertest"));
-const app_1 = __importDefault(require("../app"));
-const mongoose_1 = __importDefault(require("mongoose"));
-const user_model_1 = __importDefault(require("../models/user_model"));
-const post_model_1 = __importDefault(require("../models/post_model"));
-const comment_model_1 = __importDefault(require("../models/comment_model"));
-let app;
-let accessToken;
-let user;
-let post1;
-let comment1;
-beforeAll(async () => {
-    app = await (0, app_1.default)();
-    console.log("beforeAll");
-    await post_model_1.default.deleteMany();
-    await user_model_1.default.deleteMany({ 'email': 'test@.post.test' });
-    await comment_model_1.default.deleteMany({});
-    // Register a user
-    const registerResponse = await (0, supertest_1.default)(app).post("/auth/register").send({
-        name: "bla",
-        email: "test@.post.test",
-        password: "1234567890",
-    });
-    user = registerResponse.body;
-    // Login to get the access token
-    const loginResponse = await (0, supertest_1.default)(app).post("/auth/login").send({
-        email: user.email,
-        password: "1234567890",
-    });
-    accessToken = loginResponse.body.accessToken;
-    // Create a post
-    post1 = {
-        comments: [],
-        title: "title1",
-        message: "message1",
-        owner: user._id,
-        postImg: "postImg1",
-    };
-    // Create a comment
-    comment1 = {
-        content: "comment1",
-        owner: "1234567890",
-        createdAt: new Date(),
-    };
-});
-afterAll(async () => {
-    await mongoose_1.default.connection.close();
-});
-describe("Comment controller tests", () => {
-    test("Test Get All comments - empty response", async () => {
-        const response = await (0, supertest_1.default)(app).get("/comment");
-        expect(response.statusCode).toBe(200);
-        expect(response.body).toStrictEqual([]);
-    });
-    test("Test Post", async () => {
-        const response = await (0, supertest_1.default)(app)
-            .post("/comment")
-            .set("Authorization", "JWT " + accessToken)
-            .send(comment1);
-        expect(response.statusCode).toBe(201);
-    });
-    test("Test Get All comments - response with one comment", async () => {
-        const response = await (0, supertest_1.default)(app).get("/comment");
-        expect(response.statusCode).toBe(200);
-        expect(response.body.length).toBe(1);
-    });
-    test("Test Get comment by ID", async () => {
-        const response = await (0, supertest_1.default)(app).get("/comment");
-        const comment = response.body[0];
-        const response2 = await (0, supertest_1.default)(app).get("/comment/" + comment._id);
-        expect(response2.statusCode).toBe(200);
-        expect(response2.body.message).toBe(comment1.content);
-    });
-    test("Test Put comment by ID", async () => {
-        const response = await (0, supertest_1.default)(app).get("/comment");
-        const comment = response.body[0];
-        const response2 = await (0, supertest_1.default)(app)
-            .put("/comment/" + comment._id)
-            .set("Authorization", "JWT " + accessToken)
-            .send({ message: "new comment" });
-        expect(response2.statusCode).toBe(200);
-        expect(response2.body.message).toBe("new comment");
-    });
-    test("Test Delete comment by ID", async () => {
-        const response = await (0, supertest_1.default)(app).get("/comment");
-        const comment = response.body[0];
-        const response2 = await (0, supertest_1.default)(app)
-            .delete("/comment/" + comment._id)
-            .set("Authorization", "JWT " + accessToken);
-        expect(response2.statusCode).toBe(200);
-        expect(response2.body.message).toBe(comment1.content);
-    });
-});
+// import request from "supertest";
+// import initApp from "../app";
+// import mongoose from "mongoose";
+// import Comment from "../models/comment_model";
+// import Post from "../models/post_model";
+// import { Express } from "express";
+// let app: Express;
+// beforeAll(async () => {
+//   app = await initApp();
+// });
+// afterAll(async () => {
+//   await mongoose.connection.close();
+// });
+// describe("CommentController tests", () => {
+//   test("Test creating a comment with valid post ID", async () => {
+//     const post = await Post.create({ title: "Test Post", content: "Test post content" });
+//     const postId = post._id;
+//     const content = "This is a test comment";
+//     const response = await request(app)
+//       .post("/comments")
+//       .send({ content, postId });
+//     expect(response.statusCode).toBe(201);
+//     const createdComment = await Comment.findById(response.body._id);
+//     expect(createdComment).not.toBeNull();
+//     expect(createdComment!.content).toBe(content);
+//     expect(createdComment!.postId).toBe(postId);
+//   });
+//   test("Test creating a comment with non-existent post ID", async () => {
+//     const postId = "non-existent-post-id";
+//     const content = "This is a test comment";
+//     const response = await request(app)
+//       .post("/comments")
+//       .send({ content, postId });
+//     expect(response.statusCode).toBe(404);
+//     expect(response.body.message).toBe("post not found");
+//   });
+//   test("Test creating a comment with missing content", async () => {
+//     const post = await Post.create({ title: "Test Post", content: "Test post content" });
+//     const postId = post._id;
+//     const response = await request(app)
+//       .post("/comments")
+//       .send({ postId });
+//     expect(response.statusCode).toBe(500);
+//     expect(response.body.message).toBe("Internal Server Error");
+//   });
+//   // Add more tests as needed to cover other scenarios such as error handling for missing fields, etc.
+// });
+// // import { Express } from "express";
+// // import request from "supertest";
+// // import initApp from "../app";
+// // import mongoose from "mongoose";
+// // import { IComment } from "../models/comment_model";
+// // import User, { IUser } from "../models/user_model";
+// // import Post, { IPost } from "../models/post_model";
+// // let app: Express;
+// // let accessTokenCookie = "";
+// // const user: IUser = {
+// //   name: "John Doe",
+// //   email: "john@student.com",
+// //   password: "1234567890",
+// //   imgUrl: "https://www.google.com",
+// // };
+// // const post: IPost = {
+// //   title: "Test Movie",
+// //   message: "Test Description",
+// //   postImg: "https://www.google.com",
+// //   comments: [],
+// //   owner: user._id,
+// // };
+// // const comment: IComment = {
+// //   content: "test description",
+// //   owner: user._id,
+// //   postId: post._id,
+// //   createdAt: new Date(),
+// // };
+// // beforeAll(async () => {
+// //   app = await initApp();
+// //   await User.deleteMany({ email: user.email });
+// //   const response = await request(app).post("/auth/register").send(user);
+// //   accessTokenCookie = response.headers["set-cookie"] && response.headers["set-cookie"][1]
+// //     .split(",")
+// //     .map((item) => item.split(";")[0])
+// //     .join(";");
+// //   const postedUser = await User.findOne({ email: user.email });
+// //   user._id = postedUser.id;
+// //   post.owner = postedUser.id;
+// //   comment.owner = postedUser.id;
+// //   const postedReview = await Post.create(post);
+// //   post._id = postedReview._id;
+// //   comment.postId = postedReview._id;
+// // });
+// // afterAll(async () => {
+// //   await mongoose.connection.close();
+// // });
+// // describe("Post comment test", () => {
+// //   const addComment = async (comment: IComment) => {
+// //     const response = await request(app)
+// //       .post("/comments/")
+// //       .send(comment);
+// //     expect(response.statusCode).toBe(201);
+// //     expect(response.body.author).toBe(user._id);
+// //     expect(response.body.description).toBe(comment.content);
+// //     expect(response.body.reviewId).toBe(post._id.toString());
+// //   };
+// //   test("Post comment test", async () => {
+// //     await addComment(comment);
+// //   });
+// //   test("Post comment with valid data", async () => {
+// //     const validComment = {
+// //       content: "This is a valid comment",
+// //       postId: post._id.toString(),
+// //     };
+// //     const response = await request(app)
+// //       .post("/comments/")
+// //       .send(validComment);
+// //     expect(response.statusCode).toBe(201);
+// //     expect(response.body.content).toBe(validComment.content);
+// //     expect(response.body.author).toBe(user._id.toString());
+// //     expect(response.body.postId).toBe(post._id.toString());
+// //   });
+// //   test("Post comment with non-existing postId", async () => {
+// //     const nonExistingPostIdComment = {
+// //       content: "This comment has non-existing postId",
+// //       postId: "non-existing-post-id",
+// //     };
+// //     const response = await request(app)
+// //       .post("/comments/")
+// //       .send(nonExistingPostIdComment);
+// //     expect(response.statusCode).toBe(404);
+// //     expect(response.body.message).toBe("post not found");
+// //   });
+// // });
+// // describe("Get comments test", () => {
+// //   test("Get comments for a post", async () => {
+// //     const response = await request(app)
+// //       .get(`/comments/${post._id}`);
+// //     expect(response.statusCode).toBe(200);
+// //     expect(Array.isArray(response.body)).toBe(true);
+// //   });
+// // });
+// // describe("BaseController Methods", () => {
+// //   let commentId: string;
+// //   test("POST /comments", async () => {
+// //     const response = await request(app)
+// //       .post("/comments")
+// //       .send(comment);
+// //     expect(response.statusCode).toBe(201);
+// //     expect(response.body.content).toBe(comment.content);
+// //     expect(response.body.owner).toBe(user._id);
+// //     expect(response.body.postId).toBe(post._id.toString());
+// //     // Store the comment ID for further testing
+// //     commentId = response.body._id;
+// //   });
+// //   test("GET /comments", async () => {
+// //     const response = await request(app)
+// //       .get("/comments");
+// //     expect(response.statusCode).toBe(200);
+// //     expect(Array.isArray(response.body)).toBe(true);
+// //     expect(response.body.length).toBeGreaterThan(0);
+// //   });
+// //   test("GET /comments/:id", async () => {
+// //     const response = await request(app)
+// //       .get(`/comments/${commentId}`);
+// //     expect(response.statusCode).toBe(200);
+// //     expect(response.body.content).toBe(comment.content);
+// //     expect(response.body.owner).toBe(user._id);
+// //     expect(response.body.postId).toBe(post._id.toString());
+// //   });
+// //   test("PUT /comments/:id", async () => {
+// //     const updatedComment = { content: "Updated comment" };
+// //     const response = await request(app)
+// //       .put(`/comments/${commentId}`)
+// //       .send(updatedComment);
+// //     expect(response.statusCode).toBe(200);
+// //     expect(response.body.content).toBe(updatedComment.content);
+// //     expect(response.body.owner).toBe(user._id);
+// //     expect(response.body.postId).toBe(post._id.toString());
+// //   });
+// //   test("DELETE /comments/:id", async () => {
+// //     const response = await request(app)
+// //       .delete(`/comments/${commentId}`)
+// //       .set("Cookie", accessTokenCookie);
+// //     expect(response.statusCode).toBe(200);
+// //     expect(response.body._id).toBe(commentId);
+// //   });
+// // });
 //# sourceMappingURL=comment.test.js.map

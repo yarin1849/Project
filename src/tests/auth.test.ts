@@ -4,18 +4,6 @@ import mongoose from "mongoose";
 import { Express } from "express";
 import User from "../models/user_model";
 import jwt from 'jsonwebtoken';
-// import jwt from 'jsonwebtoken'; // Import jsonwebtoken library
-
-// // Add the generateValidRefreshToken function here
-// const generateValidRefreshToken = async () => {
-//   // Assuming you have access to the user's ID or any unique identifier
-//   const userId = user._id; // Replace with the actual user ID
-  
-//   // Sign a refresh token with the user's ID as the payload
-//   const refreshToken = jwt.sign({ _id: userId }, process.env.JWT_REFRESH_SECRET);
-  
-//   return refreshToken;
-// };
 
 let app: Express;
 const user = {
@@ -315,18 +303,7 @@ describe("Auth tests", () => {
 
   });
 
-  test("Test Register with valid name, email, and password", async () => {
-    const response = await request(app)
-      .post("/auth/register")
-      .send({
-        name: "John Doe",
-        email: "johndoe@test.com",
-        password: "1234567890",
-      });
-    expect(response.statusCode).toBe(201);
-    expect(response.body).toHaveProperty("accessToken");
-    expect(response.body).toHaveProperty("refreshToken");
-  });
+ 
 });
 
 

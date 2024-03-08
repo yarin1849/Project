@@ -8,9 +8,9 @@ const app_1 = __importDefault(require("../app"));
 const mongoose_1 = __importDefault(require("mongoose"));
 let app;
 let user;
-let post;
+//let post: IPost;
 let review;
-let token;
+//let token: string;
 beforeAll(async () => {
     app = await (0, app_1.default)();
     console.log("beforeAll");

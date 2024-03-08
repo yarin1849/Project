@@ -5,20 +5,14 @@ class BaseController {
     constructor(model) {
         this.model = model;
     }
-    async get(req, res) {
-        try {
-            const objects = await this.model.find();
-            if (objects.length === 0) {
-                res.send([]); // Return an empty array if no objects are found
-            }
-            else {
-                res.send(objects);
-            }
-        }
-        catch (err) {
-            res.status(500).json({ message: err.message });
-        }
-    }
+    // async get(req: Request, res: Response) {
+    //   try {
+    //     const objects = await this.model.find();
+    //     res.send(objects);
+    //   } catch (err) {
+    //     res.status(500).json({ message: err.message });
+    //   }
+    // }
     async getById(req, res) {
         try {
             const obj = await this.model.findById(req.params.id);
@@ -34,7 +28,6 @@ class BaseController {
             res.status(201).send(obj);
         }
         catch (err) {
-            console.log(err);
             res.status(406).send("fail: " + err.message);
         }
     }
@@ -50,11 +43,6 @@ class BaseController {
     async deleteById(req, res) {
         try {
             const obj = await this.model.findByIdAndDelete(req.params.id);
-            if (!obj) {
-                // If the object with the given ID is not found
-                return res.status(404).json({ message: "Object not found" });
-            }
-            // If the object is successfully deleted
             res.status(200).send(obj);
         }
         catch (err) {

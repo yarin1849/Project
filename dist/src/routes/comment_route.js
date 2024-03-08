@@ -66,6 +66,10 @@ const auth_middleware_1 = __importDefault(require("../common/auth_middleware"));
  *       500:
  *         description: Unexpected error
  */
+router.get("/:id", comment_controller_1.default.getById.bind(comment_controller_1.default));
+router.delete("/:id", comment_controller_1.default.getById.bind(comment_controller_1.default));
+router.delete("/:postId", comment_controller_1.default.getById.bind(comment_controller_1.default));
 router.post("/", auth_middleware_1.default, comment_controller_1.default.post.bind(comment_controller_1.default));
+router.get("/:postId", auth_middleware_1.default, comment_controller_1.default.getById.bind(comment_controller_1.default));
 exports.default = router;
 //# sourceMappingURL=comment_route.js.map
