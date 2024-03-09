@@ -13,6 +13,7 @@ const post_route_1 = __importDefault(require("./routes/post_route"));
 const user_route_1 = __importDefault(require("./routes/user_route"));
 const auth_route_1 = __importDefault(require("./routes/auth_route"));
 const comment_route_1 = __importDefault(require("./routes/comment_route"));
+const file_route_1 = __importDefault(require("./routes/file_route"));
 const initApp = () => {
     const promise = new Promise((resolve) => {
         const db = mongoose_1.default.connection;
@@ -27,7 +28,6 @@ const initApp = () => {
                 res.header("Access-Control-Allow-Origin", "*");
                 res.header("Access-Control-Allow-Methods", "*");
                 res.header("Access-Control-Allow-Headers", "*");
-                res.header("Access-Control-Allow-Credentials", "true");
                 next();
             });
             //app.use("/student", studentRoute);
@@ -35,6 +35,7 @@ const initApp = () => {
             app.use("/userpost", post_route_1.default);
             app.use("/auth", auth_route_1.default);
             app.use("/comments", comment_route_1.default);
+            app.use("/file", file_route_1.default);
             app.use("/public", express_1.default.static("public"));
             resolve(app);
         });

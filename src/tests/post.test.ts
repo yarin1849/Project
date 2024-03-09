@@ -35,7 +35,7 @@ beforeAll(async () => {
   post1 = {
     comments: [],
     title: "title1",
-    message: "message1",
+    message: "this is my first message",
     owner: user._id,
     postImg: "postImg1",
   };
@@ -52,16 +52,36 @@ describe("Post controller tests", () => {
     expect(response.body).toStrictEqual([]);
   });
 
+  // test("Test Post", async () => {
+  //   const response = await request(app)
+  //     .post("/userpost")
+  //     .set("Authorization", "JWT " + accessToken)
+  //     .send(post1);
+  //   expect(response.statusCode).toBe(201);
+  //   expect(response.body.owner).toBe(user._id);
+  //   expect(response.body.title).toBe(post1.title);
+  //   expect(response.body.message).toBe(post1.message);
+  // });
   test("Test Post", async () => {
+    const newPost1: IPost = {
+      comments: [],
+      title: "title3",
+      message: "this is my 3rd message",
+      owner: user._id,
+      postImg: "postImg3",
+    };
+  
     const response = await request(app)
       .post("/userpost")
       .set("Authorization", "JWT " + accessToken)
-      .send(post1);
+      .send(newPost1);
+  
     expect(response.statusCode).toBe(201);
     expect(response.body.owner).toBe(user._id);
-    expect(response.body.title).toBe(post1.title);
-    expect(response.body.message).toBe(post1.message);
+    expect(response.body.title).toBe(newPost1.title);
+    expect(response.body.message).toBe(newPost1.message);
   });
+  
 
   test("Test Get All user posts with one post in DB", async () => {
     const response = await request(app).get("/userpost");
@@ -100,14 +120,18 @@ describe("Post controller tests", () => {
   test("Test Get All  posts - existing posts", async () => {
     // Create some posts
     const post2 = {
-      title: "title2",
-      message: "message2",
+      title: "title22",
+      message: "message22",
       owner: user._id,
+      comments: [],
+      postImg: "postImg222",
     };
     const post3 = {
-      title: "title3",
-      message: "message3",
+      title: "title33",
+      message: "message33",
       owner: user._id,
+      comments: [],
+      postImg: "postImg33",
     };
 
     await request(app)
@@ -122,7 +146,40 @@ describe("Post controller tests", () => {
 
     const response = await request(app).get("/userpost");
     expect(response.statusCode).toBe(200);
-   // expect(response.body.length).toBe(3); // Expecting 3 posts including the previously created post1
+   //expect(response.body.length).toBe(3); // Expecting 3 posts including the previously created post1
+   
+  const createdPosts = response.body;
+  expect(createdPosts.length).toBeGreaterThan(0);
+  });
+  test("Test Post 2 new Posts ", async () => {
+    // Create some posts
+    const post2 = {
+      title: "title2",
+      message: "message2",
+      owner: '1234',
+    };
+    const post3 = {
+      title: "title3",
+      message: "message3",
+      owner: '123456',
+    };
+
+    await request(app)
+      .post("/userpost")
+      .set("Authorization", "JWT " + accessToken)
+      .send(post2);
+
+    await request(app)
+      .post("/userpost")
+      .set("Authorization", "JWT " + accessToken)
+      .send(post3);
+
+    const response = await request(app).post("/userpost");
+    //expect(response.statusCode).toBe(200);
+    expect(response.body.length).toBeGreaterThan(2); // Expecting 3 posts including the previously created post1
+   
+  const createdPosts = response.body;
+  expect(createdPosts.length).toBeGreaterThan(0);
   });
 
   test("Test Get User post by ID", async () => {
@@ -143,16 +200,16 @@ describe("Post controller tests", () => {
   });
 
 
-  test("Test Post", async () => {
-    const response = await request(app)
-      .post("/userpost")
-      .set("Authorization", "JWT " + accessToken)
-      .send(post1);
-    expect(response.statusCode).toBe(201);
-    expect(response.body.owner).toBe(user._id);
-    expect(response.body.title).toBe(post1.title);
-    expect(response.body.message).toBe(post1.message);
-  });
+  // test("Test Post", async () => {
+  //   const response = await request(app)
+  //     .post("/userpost")
+  //     .set("Authorization", "JWT " + accessToken)
+  //     .send(post1);
+  //   expect(response.statusCode).toBe(201);
+  //   expect(response.body.owner).toBe(user._id);
+  //   expect(response.body.title).toBe(post1.title);
+  //   expect(response.body.message).toBe(post1.message);
+  // });
   
   test("Test Get Post by ID - Post Found", async () => {
     // Make a request to create a post

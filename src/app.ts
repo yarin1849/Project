@@ -8,6 +8,7 @@ import PostRoute from "./routes/post_route";
 import userRoute from "./routes/user_route";
 import authRoute from "./routes/auth_route";
 import commentRoute from './routes/comment_route';
+import fileRoute from "./routes/file_route";
 
 const initApp = (): Promise<Express> => {
   const promise = new Promise<Express>((resolve) => {
@@ -23,7 +24,6 @@ const initApp = (): Promise<Express> => {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Methods", "*");
         res.header("Access-Control-Allow-Headers", "*");
-        res.header("Access-Control-Allow-Credentials", "true");
         next();
       })
       //app.use("/student", studentRoute);
@@ -31,6 +31,7 @@ const initApp = (): Promise<Express> => {
       app.use("/userpost", PostRoute);
       app.use("/auth", authRoute);
       app.use("/comments", commentRoute);
+      app.use("/file", fileRoute);
       app.use("/public", express.static("public"));
       resolve(app);
     });

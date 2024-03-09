@@ -10,6 +10,8 @@
     "testUser": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/user.test.ts",
     "testComment": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/comment.test.ts",
     "testReview": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/review.test.ts",
+    "testFile": "tsc && jest --detectOpenHandles --forceExit --runInBand ./src/tests/file.test.ts",
+
     "start": "tsc && node ./dist/src/server.js",
     "dev": "nodemon ./src/server.ts"
   },
@@ -29,12 +31,14 @@
     "google-auth-library": "^9.6.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.0.2",
+    "multer": "^1.4.5-lts.1",
     "openssl": "^2.0.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   },
   "devDependencies": {
     "@types/jest": "^29.5.11",
+    "@types/multer": "^1.4.11",
     "@types/supertest": "^2.0.16",
     "jest": "^29.7.0",
     "nodemon": "^3.0.1",
