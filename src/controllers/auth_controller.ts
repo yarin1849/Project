@@ -3,7 +3,54 @@ import User, { IUser } from '../models/user_model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { Document } from 'mongoose';
+import {OAuth2Client} from 'google-auth-library';
 
+const accessTokenExpiration = parseInt(process.env.JWT_EXPIRATION_MILL);
+
+const client = new OAuth2Client();
+const googleSignin = async (req: Request, res: Response) => {
+    console.log(req.body);
+    try{
+        const ticket = await client.verifyIdToken({
+            idToken: req.body.credential,
+            audience: process.env.GOOGLE_CLIENT_ID, 
+        });
+        const payload = ticket.getPayload();
+        const email = payload?.email;
+        if(email != null){
+            let user = await User.findOne({ 'email':email});
+            if(user == null){
+                user = await User.create(
+                    {
+                        'name' : payload?.name,
+                        'email': email,
+                        'imgUrl': payload?.picture,
+                        'password': ''
+                    });
+                }
+                const tokens = await generateTokens(user)
+                res.cookie("refresh", tokens.refreshToken, {
+                    httpOnly: true,
+                    path: "/auth",
+                  });
+                  res.cookie("access", tokens.accessToken, {
+                    httpOnly: true,
+                    maxAge: accessTokenExpiration,
+                  });
+                res.status(200).send({
+                    name: user.name,
+                    email:user.email,
+                    _id: user._id,
+                    imgUrl: user.imgUrl,
+                    ...tokens
+                });
+        }
+        return res.status(400).send("error fetching user data from google");
+
+    }catch(err){
+        return res.status(401).send(err.message);
+    }
+}
 const register = async (req: Request, res: Response) => {
     const name = req.body.name;
     const email = req.body.email;
@@ -27,6 +74,14 @@ const register = async (req: Request, res: Response) => {
                 'imgUrl': imgUrl
             });
         const tokens = await generateTokens(rs2)
+        res.cookie("refresh", tokens.refreshToken, {
+            httpOnly: true,
+            path: "/auth",
+          });
+          res.cookie("access", tokens.accessToken, {
+            httpOnly: true,
+            maxAge: accessTokenExpiration,
+          });
         res.status(201).send(
             {
                 name: rs2.name,
@@ -34,7 +89,8 @@ const register = async (req: Request, res: Response) => {
                 _id: rs2._id,
                 imgUrl: rs2.imgUrl,
                 ...tokens
-            })
+            });
+           // return res.status(201).send(rs2)
     } catch (err) {
         return res.status(400).send("error missing email or password");
     }
@@ -44,10 +100,7 @@ const generateTokens = async (user: Document & IUser) => {
     const accessToken = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRATION,
         });
-        const refreshToken = jwt.sign(
-        { _id: user._id },
-        process.env.JWT_REFRESH_SECRET
-        );
+        const refreshToken = jwt.sign({ _id: user._id },process.env.JWT_REFRESH_SECRET);
         if (user.refreshTokens == null) {
         user.refreshTokens = [refreshToken];
         } else if (!user.refreshTokens.includes(refreshToken)) {
@@ -77,6 +130,14 @@ const login = async (req: Request, res: Response) => {
         }
 
         const tokens = await generateTokens(user)
+        res.cookie("refresh", tokens.refreshToken, {
+            httpOnly: true,
+            path: "/auth",
+          });
+          res.cookie("access", tokens.accessToken, {
+            httpOnly: true,
+            maxAge: accessTokenExpiration,
+          });
         return res.status(200).send(tokens);
     } catch (err) {
         return res.status(400).send("error missing email or password");
@@ -129,6 +190,16 @@ const refresh = async (req: Request, res: Response) => {
             userDb.refreshTokens = userDb.refreshTokens.filter(t => t !== refreshToken);
             userDb.refreshTokens.push(newRefreshToken);
             await userDb.save();
+
+            res.cookie("refresh", newRefreshToken, {
+                httpOnly: true,
+                path: "/auth",
+              });
+              res.cookie("access", accessToken, {
+                httpOnly: true,
+                maxAge: accessTokenExpiration,
+              });
+
             return res.status(200).send({
                 'accessToken': accessToken,
                 'refreshToken': newRefreshToken  // Use the new refresh token here
@@ -141,6 +212,7 @@ const refresh = async (req: Request, res: Response) => {
 }
 
 export default {
+    googleSignin,
     register,
     login,
     logout,

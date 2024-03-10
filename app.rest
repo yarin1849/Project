@@ -55,3 +55,11 @@ Content-Type: application/json
 DELETE http://localhost:3000/user/1234567891
 
 ###
+
+POST http://localhost:3000/auth/google
+Content-Type: application/json
+
+{
+    "credential": "632986613914-uhjteviggvm5odspcbeqgc8lh4fi0pdv.apps.googleusercontent.com
+"
+}
