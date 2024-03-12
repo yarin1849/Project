@@ -66,7 +66,7 @@ router.get("/", post_controller_1.default.get.bind(post_controller_1.default));
 *       404:
 *         description:  post not found
 */
-router.get("/:id", post_controller_1.default.getById.bind(post_controller_1.default));
+router.get("/:id", post_controller_1.default.getPostById.bind(post_controller_1.default));
 /**
 * @swagger
 * /posts:

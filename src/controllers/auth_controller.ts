@@ -25,7 +25,7 @@ const googleSignin = async (req: Request, res: Response) => {
                         'name' : payload?.name,
                         'email': email,
                         'imgUrl': payload?.picture,
-                        'password': ''
+                        'password': '1234'
                     });
                 }
                 const tokens = await generateTokens(user)

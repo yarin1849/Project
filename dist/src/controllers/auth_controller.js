@@ -25,7 +25,7 @@ const googleSignin = async (req, res) => {
                     'name': payload === null || payload === void 0 ? void 0 : payload.name,
                     'email': email,
                     'imgUrl': payload === null || payload === void 0 ? void 0 : payload.picture,
-                    'password': ''
+                    'password': '1234'
                 });
             }
             const tokens = await generateTokens(user);

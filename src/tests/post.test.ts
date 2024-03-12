@@ -34,10 +34,10 @@ beforeAll(async () => {
   // Create a post
   post1 = {
     comments: [],
-    title: "title1",
-    message: "this is my first message",
+    title: "First Visit to Haifa-Bahá'í Gardens22",
+    message: "This UNESCO World Heritage Site is a stunning terraced garden that surrounds the Shrine of the Báb, a holy site for the Bahá'í Faith. The gardens offer breathtaking views of the city and the Mediterranean Sea.",
     owner: user._id,
-    postImg: "postImg1",
+    postImg: "http://localhost:3000/public\\1710188202692.jpg",
   };
 });
 
@@ -120,18 +120,18 @@ describe("Post controller tests", () => {
   test("Test Get All  posts - existing posts", async () => {
     // Create some posts
     const post2 = {
-      title: "title22",
-      message: "message22",
+      title: "Best of the Best - Jerusalem22",
+      message: "Visitors can explore the narrow streets of the Jewish, Christian, Armenian, and Muslim quarters, soak in the vibrant atmosphere of the markets, and immerse themselves in the city's profound religious and historical significance.",
       owner: user._id,
       comments: [],
-      postImg: "postImg222",
+      postImg: "http://localhost:3000/public\\1710188157651.jpg",
     };
     const post3 = {
-      title: "title33",
-      message: "message33",
+      title: "Tel Aviv Beaches22",
+      message: "message33 some message here",
       owner: user._id,
       comments: [],
-      postImg: "postImg33",
+      postImg: "http://localhost:3000/public\\1710188183765.jpg",
     };
 
     await request(app)

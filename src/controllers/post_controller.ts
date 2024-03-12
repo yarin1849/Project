@@ -31,7 +31,27 @@ class PostController extends BaseController<IPost> {
             res.status(500).json({ message: err.message });
         }
     }
-    
+    async getPostById(postId) {
+        try {
+            const post = await Post.findById(postId);
+            if (post) {
+                const postData = {
+                    title: post.title,
+                    message: post.message,
+                    owner: post.owner,
+                    _id: post._id.toString(),
+                    comments: post.comments, // Assuming comments are already populated
+                    postImg: post.postImg // Assigning the URL of the image
+                };
+                return postData;
+            } else {
+                return null; // Post not found
+            }
+        } catch (error) {
+            console.error('Error fetching post:', error);
+            throw error;
+        }
+    }
     // async getById2(req: AuthRequest, res: Response) {
     //     console.log("Get Post by Id:" + req.params.id);
     //     try {
