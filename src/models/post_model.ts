@@ -3,7 +3,7 @@ import mongoose, { ObjectId } from "mongoose";
 export interface IPost {
   title: string;
   message: string;
-  owner?: string;
+  owner?: ObjectId;
   _id?: ObjectId;
   comments: ObjectId[];
   postImg: string;

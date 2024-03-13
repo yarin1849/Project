@@ -10,47 +10,91 @@ const accessTokenExpiration = parseInt(process.env.JWT_EXPIRATION_MILL);
 const client = new OAuth2Client();
 const googleSignin = async (req: Request, res: Response) => {
     console.log(req.body);
-    try{
+    try {
         const ticket = await client.verifyIdToken({
             idToken: req.body.credential,
-            audience: process.env.GOOGLE_CLIENT_ID, 
+            audience: process.env.GOOGLE_CLIENT_ID,
         });
         const payload = ticket.getPayload();
         const email = payload?.email;
-        if(email != null){
-            let user = await User.findOne({ 'email':email});
-            if(user == null){
-                user = await User.create(
-                    {
-                        'name' : payload?.name,
-                        'email': email,
-                        'imgUrl': payload?.picture,
-                        'password': '1234'
-                    });
-                }
-                const tokens = await generateTokens(user)
-                res.cookie("refresh", tokens.refreshToken, {
-                    httpOnly: true,
-                    path: "/auth",
-                  });
-                  res.cookie("access", tokens.accessToken, {
-                    httpOnly: true,
-                    maxAge: accessTokenExpiration,
-                  });
-                res.status(200).send({
-                    name: user.name,
-                    email:user.email,
-                    _id: user._id,
-                    imgUrl: user.imgUrl,
-                    ...tokens
+        if (email != null) {
+            let user = await User.findOne({ 'email': email });
+            if (user == null) {
+                user = await User.create({
+                    'name': payload?.name,
+                    'email': email,
+                    'imgUrl': payload?.picture,
+                    'password': '1234'
                 });
+            }
+            const tokens = await generateTokens(user)
+            res.cookie("refresh", tokens.refreshToken, {
+                httpOnly: true,
+                path: "/auth",
+            });
+            res.cookie("access", tokens.accessToken, {
+                httpOnly: true,
+                maxAge: accessTokenExpiration,
+            });
+            return res.status(200).send({
+                name: user.name,
+                email: user.email,
+                _id: user._id,
+                imgUrl: user.imgUrl,
+                ...tokens
+            });
+        } else {
+            // Handle unexpected conditions
+            return res.status(400).send("Email is null or empty");
         }
-        return res.status(400).send("error fetching user data from google");
-
-    }catch(err){
+    } catch (err) {
         return res.status(401).send(err.message);
     }
 }
+
+// const googleSignin = async (req: Request, res: Response) => {
+//     console.log(req.body);
+//     try{
+//         const ticket = await client.verifyIdToken({
+//             idToken: req.body.credential,
+//             audience: process.env.GOOGLE_CLIENT_ID, 
+//         });
+//         const payload = ticket.getPayload();
+//         const email = payload?.email;
+//         if(email != null){
+//             let user = await User.findOne({ 'email':email});
+//             if(user == null){
+//                 user = await User.create(
+//                     {
+//                         'name' : payload?.name,
+//                         'email': email,
+//                         'imgUrl': payload?.picture,
+//                         'password': '1234'
+//                     });
+//                 }
+//                 const tokens = await generateTokens(user)
+//                 res.cookie("refresh", tokens.refreshToken, {
+//                     httpOnly: true,
+//                     path: "/auth",
+//                   });
+//                   res.cookie("access", tokens.accessToken, {
+//                     httpOnly: true,
+//                     maxAge: accessTokenExpiration,
+//                   });
+//                 res.status(200).send({
+//                     name: user.name,
+//                     email:user.email,
+//                     _id: user._id,
+//                     imgUrl: user.imgUrl,
+//                     ...tokens
+//                 });
+//         }
+//         return res.status(400).send("error fetching user data from google");
+
+//     }catch(err){
+//         return res.status(401).send(err.message);
+//     }
+// }
 const register = async (req: Request, res: Response) => {
     const name = req.body.name;
     const email = req.body.email;

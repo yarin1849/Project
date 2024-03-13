@@ -27,20 +27,20 @@ class UserController extends BaseController<IUser> {
     
 
 
-    async putById2(req: AuthRequest, res: Response) {
-        console.log("Put User", req.body);
-        const id = req.user._id;
+    // async putById2(req: AuthRequest, res: Response) {
+    //     console.log("Put User", req.body);
+    //     const id = req.user._id;
 
-        try {
-        const updatedUser = await this.model.findByIdAndUpdate(id, req.body, {
-            new: true,
-        });
-        const { ...updatedUserWithoutPassword } = updatedUser.toObject();
-        res.status(200).send(updatedUserWithoutPassword);
-        } catch (err) {
-        res.status(500).json({ message: err.message });
-        }
-    }
+    //     try {
+    //     const updatedUser = await this.model.findByIdAndUpdate(id, req.body, {
+    //         new: true,
+    //     });
+    //     const { ...updatedUserWithoutPassword } = updatedUser.toObject();
+    //     res.status(200).send(updatedUserWithoutPassword);
+    //     } catch (err) {
+    //     res.status(500).json({ message: err.message });
+    //     }
+    // }
 }
 
 export default new UserController();

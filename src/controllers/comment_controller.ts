@@ -22,7 +22,7 @@ class CommentController extends BaseController<IComment> {
 
       const comment = await Comment.create({
         content,
-        author: userId,
+        owner: userId,
         postId: postFind.id,
       });
 

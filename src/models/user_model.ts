@@ -1,11 +1,11 @@
-import mongoose from "mongoose";
+import mongoose, { ObjectId } from "mongoose";
 
 export interface IUser {
   name: string,
   email: string;
   password: string;
   imgUrl?: string;
-  _id?: string;
+  _id?: ObjectId;
   refreshTokens?: string[];
 }
 

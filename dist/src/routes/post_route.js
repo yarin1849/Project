@@ -66,7 +66,7 @@ router.get("/", post_controller_1.default.get.bind(post_controller_1.default));
 *       404:
 *         description:  post not found
 */
-router.get("/:id", post_controller_1.default.getPostById.bind(post_controller_1.default));
+router.get("/:id", post_controller_1.default.getById.bind(post_controller_1.default));
 /**
 * @swagger
 * /posts:
@@ -125,7 +125,7 @@ router.post("/", auth_middleware_1.default, post_controller_1.default.post.bind(
 *       404:
 *         description:  post not found
 */
-router.put("/:id", auth_middleware_1.default, post_controller_1.default.putById.bind(post_controller_1.default));
+router.put("/:id", auth_middleware_1.default, post_controller_1.default.putById2.bind(post_controller_1.default));
 /**
 * @swagger
 * /delete/{id}:

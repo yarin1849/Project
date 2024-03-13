@@ -66,7 +66,7 @@ router.get("/", PostController.get.bind(PostController));
 *       404:
 *         description:  post not found
 */
-router.get("/:id", PostController.getPostById.bind(PostController));
+router.get("/:id", PostController.getById.bind(PostController));
 
 /**
 * @swagger
@@ -127,7 +127,7 @@ router.post("/", authMiddleware, PostController.post.bind(PostController));
 *       404:
 *         description:  post not found
 */
-router.put("/:id", authMiddleware, PostController.putById.bind(PostController));
+router.put("/:id", authMiddleware, PostController.putById2.bind(PostController));
 
 /**
 * @swagger

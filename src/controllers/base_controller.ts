@@ -7,14 +7,19 @@ export class BaseController<ModelType> {
     this.model = model;
   }
 
-  // async get(req: Request, res: Response) {
-  //   try {
-  //     const objects = await this.model.find();
-  //     res.send(objects);
-  //   } catch (err) {
-  //     res.status(500).json({ message: err.message });
-  //   }
-  // }
+  async get(req: Request, res: Response) {
+    try {
+        if (req.query.name) {
+            const object = await this.model.find({ name: req.query.name });
+            res.send(object);
+        } else {
+            const objects = await this.model.find();
+            res.send(objects);
+        }
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
 
   async getById(req: Request, res: Response) {
     try {

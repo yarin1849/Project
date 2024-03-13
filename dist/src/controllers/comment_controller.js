@@ -21,7 +21,7 @@ class CommentController extends base_controller_1.BaseController {
             }
             const comment = await comment_model_1.default.create({
                 content,
-                author: userId,
+                owner: userId,
                 postId: postFind.id,
             });
             postFind.comments.push(comment.id);
