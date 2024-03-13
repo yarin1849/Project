@@ -62,6 +62,26 @@ const auth_controller_1 = __importDefault(require("../controllers/auth_controlle
 *               $ref: '#/components/schemas/User'
 */
 router.post("/register", auth_controller_1.default.register);
+/**
+* @swagger
+* /auth/google:
+*   post:
+*     summary: registers in google sign in as a new user
+*     tags: [Auth]
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             $ref: '#/components/schemas/User'
+*     responses:
+*       200:
+*         description: The new user by google
+*         content:
+*           application/json:
+*             schema:
+*               $ref: '#/components/schemas/User'
+*/
 router.post("/google", auth_controller_1.default.googleSignin);
 /**
 * @swagger
