@@ -48,13 +48,23 @@ const post: IPost = {
   comments: [],
   postImg:"http://localhost:3000/public\\1710188157651.jpg",
 };
+
 const post2: IPost = {
-        title: "Best- Jerusalem22",
-        message: "Visitors can explore the narrow streets of the Jewish, Christian, Armenian, and Muslim quarters, soak in the vibrant atmosphere of the markets, and immerse themselves in the city's profound religious and historical significance.",
-        owner: user._id,
-        comments: [],
-        postImg: "http://localhost:3000/public\\1710188157651.jpg",
+  title: "Best- Jerusalem22",
+  message: "Visitors can explore the narrow streets of the Jewish, Christian, Armenian, and Muslim quarters, soak in the vibrant atmosphere of the markets, and immerse themselves in the city's profound religious and historical significance.",
+  owner: user._id,
+  comments: [],
+  postImg: "http://localhost:3000/public\\1710188157651.jpg",
 };
+
+// post2.comments.push({
+//   _id: user._id, 
+//   owner: user._id, 
+//   content: "This is a great post!",
+//   postId: post2._id, 
+//   createdAt: new Date() 
+// });
+
 
 const post3: IPost = {
   title: "Best- Tel aviv2",
@@ -63,6 +73,8 @@ const post3: IPost = {
   comments: [],
   postImg: "http://localhost:3000/public\\1710188157651.jpg",
 };
+
+
 
 describe("Post tests", () => {
   const addPost = async (post: IPost) => {
@@ -84,9 +96,59 @@ describe("Post tests", () => {
   test("Test post2", async () => {
     await addPost(post2);
   });
-  test("Test post3", async () => {
-    await addPost(post3);
+  test("Test post2", async () => {
+    const post2Response = await request(app)
+      .post("/userpost")
+      .set("Authorization", "JWT " + accessToken)
+      .send(post2);
+  
+    expect(post2Response.statusCode).toBe(201);
+    const createdPost2 = post2Response.body;
+    // Add a comment to the created post
+    const comment = {
+      _id: user._id,
+      owner: user._id,
+      content: "This is a great post! test test",
+      postId: createdPost2._id,
+      createdAt: new Date(),
+    };
+  
+    createdPost2.comments.push(comment);
+  
+    const updatePostResponse = await request(app)
+      .put(`/userpost/${createdPost2._id}`)
+      .set("Authorization", "JWT " + accessToken)
+      .send(createdPost2);
+  
+    expect(updatePostResponse.statusCode).toBe(200);
   });
+  
+  test("Test post3", async () => {
+    const post3Response = await request(app)
+      .post("/userpost")
+      .set("Authorization", "JWT " + accessToken)
+      .send(post3);
+  
+    expect(post3Response.statusCode).toBe(201);
+    const createdPost3 = post3Response.body;
+    const comment = {
+      _id: user._id,
+      owner: user._id,
+      content: "This is second commenttest test",
+      postId: createdPost3._id,
+      createdAt: new Date(),
+    };
+  
+    createdPost3.comments.push(comment);
+  
+    const updatePostResponse = await request(app)
+      .put(`/userpost/${createdPost3._id}`)
+      .set("Authorization", "JWT " + accessToken)
+      .send(createdPost3);
+  
+    expect(updatePostResponse.statusCode).toBe(200);
+  });
+  
 
  
   test("Get all posts from the database", async () => {

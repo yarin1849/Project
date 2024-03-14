@@ -10,7 +10,8 @@ export interface IComment {
 
 const commentSchema = new mongoose.Schema<IComment>({
   owner: {
-    type: String,
+    //type: String,
+    type: mongoose.Schema.ObjectId,
     ref: 'User',
     required: true
   },

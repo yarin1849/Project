@@ -69,7 +69,6 @@ describe("Post comment test", () => {
             postId: user._id, // not post id so should fail
             createdAt: new Date(),
         };
-        // Make a request to post the comment
         const response = await (0, supertest_1.default)(app)
             .post("/comments")
             .set("Authorization", "JWT " + accessToken)

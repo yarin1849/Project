@@ -77,7 +77,6 @@ describe("Post comment test", () => {
       createdAt: new Date(),
     };
   
-    // Make a request to post the comment
     const response = await request(app)
       .post("/comments")
       .set("Authorization", "JWT " + accessToken)

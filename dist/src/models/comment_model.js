@@ -6,7 +6,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
 const commentSchema = new mongoose_1.default.Schema({
     owner: {
-        type: String,
+        //type: String,
+        type: mongoose_1.default.Schema.ObjectId,
         ref: 'User',
         required: true
     },

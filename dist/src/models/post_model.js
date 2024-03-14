@@ -17,12 +17,17 @@ const PostSchema = new mongoose_1.default.Schema({
         type: String,
         required: true,
     },
-    comments: {
-        type: [mongoose_1.default.Schema.Types.ObjectId],
-        ref: "Comment",
-        default: [],
-        required: true,
-    },
+    // comments: {
+    //   type: [mongoose.Schema.Types.ObjectId],
+    //   ref: "Comment",
+    //   default: [],
+    //   required: true,
+    // },
+    comments: [
+        { type: mongoose_1.default.Schema.Types.ObjectId,
+            ref: 'Comment'
+        }
+    ],
     postImg: {
         type: String,
         required: true,
