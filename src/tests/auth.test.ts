@@ -49,6 +49,7 @@ describe("Auth tests", () => {
       });
     expect(response.statusCode).toBe(400);
   });
+  
 
   test("Test Login", async () => {
     const response = await request(app)

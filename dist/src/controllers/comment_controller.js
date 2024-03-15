@@ -10,6 +10,14 @@ class CommentController extends base_controller_1.BaseController {
     constructor() {
         super(comment_model_1.default);
     }
+    // async getById(req: AuthRequest, res: Response) {
+    //   try {
+    //     const obj = await this.model.findById(req.params.id);
+    //     res.send(obj);
+    //   } catch (err) {
+    //     res.status(500).json({ message: err.message });
+    //   } 
+    // }
     async post(req, res) {
         try {
             const userId = req.user._id;
@@ -30,6 +38,19 @@ class CommentController extends base_controller_1.BaseController {
         }
         catch (error) {
             res.status(500).json({ message: "Internal Server Error" });
+        }
+    }
+    async getCommentCount(req, res) {
+        try {
+            const postId = req.params.id; // Corrected route parameter
+            console.log("Post ID:", postId);
+            const commentCount = await comment_model_1.default.countDocuments({ postId });
+            console.log("Comment count:", commentCount);
+            res.send({ count: commentCount });
+        }
+        catch (err) {
+            console.error("Error:", err.message);
+            res.status(500).json({ message: err.message });
         }
     }
 }

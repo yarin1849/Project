@@ -9,5 +9,6 @@ const comment_controller_1 = __importDefault(require("../controllers/comment_con
 const auth_middleware_1 = __importDefault(require("../common/auth_middleware"));
 router.get("/:id", auth_middleware_1.default, comment_controller_1.default.getById.bind(comment_controller_1.default));
 router.post("/", auth_middleware_1.default, comment_controller_1.default.post.bind(comment_controller_1.default));
+router.get('/count/:id', comment_controller_1.default.getCommentCount);
 exports.default = router;
 //# sourceMappingURL=comment_route.js.map

@@ -8,7 +8,15 @@ class CommentController extends BaseController<IComment> {
   constructor() {
     super(Comment);
   }
-
+  // async getById(req: AuthRequest, res: Response) {
+  //   try {
+      
+  //     const obj = await this.model.findById(req.params.id);
+  //     res.send(obj);
+  //   } catch (err) {
+  //     res.status(500).json({ message: err.message });
+  //   } 
+  // }
   async post(req: AuthRequest, res: Response) {
     try {
       const userId = req.user._id;
@@ -25,7 +33,6 @@ class CommentController extends BaseController<IComment> {
         owner: userId,
         postId: postFind.id,
       });
-
       postFind.comments.push(comment.id);
 
       await postFind.save();
@@ -34,6 +41,22 @@ class CommentController extends BaseController<IComment> {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
+
+  async getCommentCount(req: AuthRequest, res: Response) {
+    try {
+        const postId = req.params.id; // Corrected route parameter
+        console.log("Post ID:", postId);
+        const commentCount = await Comment.countDocuments({ postId });
+        console.log("Comment count:", commentCount);
+        res.send({ count: commentCount });
+    } catch (err) {
+        console.error("Error:", err.message);
+        res.status(500).json({ message: err.message });
+    }
+}
+
+
+
 }
 
 

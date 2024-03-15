@@ -4,6 +4,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
+// interface Comment{
+//   _id: ObjectId;
+//   content: string;
+//   owner: ObjectId;
+//   postId: ObjectId;
+//   createdAt: Date;
+// }
 const PostSchema = new mongoose_1.default.Schema({
     title: {
         type: String,

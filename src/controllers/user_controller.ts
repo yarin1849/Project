@@ -19,7 +19,7 @@ class UserController extends BaseController<IUser> {
                 "imgUrl",
             ]);
     
-            res.send(user); // Send the user object
+            res.send(user); 
         } catch (err) {
             res.status(500).json({ message: "unable to retrieve user data" });
         }

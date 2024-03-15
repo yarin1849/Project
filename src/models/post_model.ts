@@ -1,21 +1,22 @@
 import mongoose, { ObjectId } from "mongoose";
+import { IComment } from "./comment_model";
 
 export interface IPost {
   title: string;
   message: string;
   owner?: ObjectId;
   _id?: ObjectId;
-  comments: Comment[];
+  comments: IComment[]; 
   postImg: string;
 }
 
-interface Comment{
-  _id: ObjectId;
-  content: string;
-  owner: ObjectId;
-  postId: ObjectId;
-  createdAt: Date;
-}
+// interface Comment{
+//   _id: ObjectId;
+//   content: string;
+//   owner: ObjectId;
+//   postId: ObjectId;
+//   createdAt: Date;
+// }
 const PostSchema = new mongoose.Schema<IPost>({
   title: {
     type: String,
