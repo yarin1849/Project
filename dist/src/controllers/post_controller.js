@@ -13,7 +13,7 @@ class PostController extends base_controller_1.BaseController {
     async post(req, res) {
         console.log("Post: " + req.body);
         const userId = req.user._id;
-        req.body.author = userId;
+        req.body.owner = userId;
         super.post(req, res);
     }
     async deleteById(req, res) {
@@ -29,6 +29,16 @@ class PostController extends base_controller_1.BaseController {
     async putById2(req, res) {
         console.log("Put Post by Id:" + req.params.id);
         super.putById(req, res);
+    }
+    async getByUserId(req, res) {
+        try {
+            const userId = req.query.userId;
+            const obj = await this.model.find({ owner: userId });
+            res.status(200).json(obj);
+        }
+        catch (err) {
+            res.status(406).send("fail: " + err.message);
+        }
     }
 }
 exports.default = new PostController();

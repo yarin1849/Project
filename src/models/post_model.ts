@@ -27,9 +27,11 @@ const PostSchema = new mongoose.Schema<IPost>({
     required: true,
   },
   owner: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User', 
     required: true,
   },
+  
   // comments: {
   //   type: [mongoose.Schema.Types.ObjectId],
   //   ref: "Comment",

@@ -23,6 +23,12 @@ const userSchema = new mongoose_1.default.Schema({
         type: [String],
         required: false,
     },
+    latitude: {
+        type: Number, // Define type for latitude
+    },
+    longitude: {
+        type: Number, // Define type for longitude
+    },
 });
 exports.default = mongoose_1.default.model("User", userSchema);
 //# sourceMappingURL=user_model.js.map

@@ -14,6 +14,8 @@ const user_route_1 = __importDefault(require("./routes/user_route"));
 const auth_route_1 = __importDefault(require("./routes/auth_route"));
 const comment_route_1 = __importDefault(require("./routes/comment_route"));
 const file_route_1 = __importDefault(require("./routes/file_route"));
+const location_route_1 = __importDefault(require("./routes/location_route"));
+//import cors from "cors";
 const initApp = () => {
     const promise = new Promise((resolve) => {
         const db = mongoose_1.default.connection;
@@ -22,8 +24,8 @@ const initApp = () => {
         const url = process.env.DB_URL;
         mongoose_1.default.connect(url).then(() => {
             const app = (0, express_1.default)();
-            app.use(body_parser_1.default.json());
-            app.use(body_parser_1.default.urlencoded({ extended: true }));
+            app.use(body_parser_1.default.json({ limit: "50mb" }));
+            app.use(body_parser_1.default.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
             app.use((req, res, next) => {
                 res.header("Access-Control-Allow-Origin", "*");
                 res.header("Access-Control-Allow-Methods", "*");
@@ -36,7 +38,9 @@ const initApp = () => {
             app.use("/auth", auth_route_1.default);
             app.use("/comments", comment_route_1.default);
             app.use("/file", file_route_1.default);
+            app.use("/user-locations", location_route_1.default);
             app.use("/public", express_1.default.static("public"));
+            //app.use(cors())
             resolve(app);
         });
     });

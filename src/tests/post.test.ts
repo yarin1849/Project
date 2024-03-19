@@ -12,9 +12,8 @@ const user: IUser = {
   email: "test@student.post.test",
   password: "1234567890",
 }
-
 const user2: IUser = {
-  name: "test2 test2",
+  name: "user1 test2",
   email: "test22@student.post.test",
   password: "123456789220",
 }
@@ -35,7 +34,7 @@ beforeAll(async () => {
   post.owner = user._id;
   // const postedReview = await Post.create(post);
   // post._id = postedReview._id;
-  post2.owner = user._id;
+  post2.owner = Object('65f840b754df15a4203728a4');
   user2._id = response.body._id;
   post3.owner = user2._id;
 });

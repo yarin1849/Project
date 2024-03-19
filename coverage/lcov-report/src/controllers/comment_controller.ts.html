@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">80.64% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>25/25</span>
+                <span class='fraction'>25/31</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>3/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">80.64% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>25/25</span>
+                <span class='fraction'>25/31</span>
             </div>
         
             
@@ -127,7 +127,11 @@
 <a name='L62'></a><a href='#L62'>62</a>
 <a name='L63'></a><a href='#L63'>63</a>
 <a name='L64'></a><a href='#L64'>64</a>
-<a name='L65'></a><a href='#L65'>65</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">5x</span>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -136,14 +140,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -162,12 +158,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -201,19 +209,11 @@ class CommentController extends BaseController&lt;IComment&gt; {
   constructor() {
     super(Comment);
   }
-  // async getById(req: AuthRequest, res: Response) {
-  //   try {
-      
-  //     const obj = await this.model.findById(req.params.id);
-  //     res.send(obj);
-  //   } catch (err) {
-  //     res.status(500).json({ message: err.message });
-  //   } 
-  // }
+  
   async post(req: AuthRequest, res: Response) {
     try {
       const userId = req.user._id;
-      const { content, postId } = req.body;
+      const { content, postId} = req.body;
 &nbsp;
       const postFind = await Post.findById(postId);
       if (!postFind) {
@@ -225,6 +225,7 @@ class CommentController extends BaseController&lt;IComment&gt; {
         content,
         owner: userId,
         postId: postFind.id,
+        createdAt: new Date(),
       });
       postFind.comments.push(comment.id);
 &nbsp;
@@ -234,6 +235,17 @@ class CommentController extends BaseController&lt;IComment&gt; {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
+&nbsp;
+<span class="fstat-no" title="function not covered" >  async </span>getCommentsByPostId(req: AuthRequest, res: Response) {
+<span class="cstat-no" title="statement not covered" >    try {</span>
+        const postId = <span class="cstat-no" title="statement not covered" >req.params.postId;</span>
+        const comments = <span class="cstat-no" title="statement not covered" >await Comment.find({ postId }).populate('owner');</span>
+<span class="cstat-no" title="statement not covered" >        res.status(200).json(comments);</span>
+    } catch (error) {
+<span class="cstat-no" title="statement not covered" >        console.error("Error fetching comments by post ID:", error);</span>
+<span class="cstat-no" title="statement not covered" >        res.status(500).json({ message: "Failed to fetch comments by post ID" });</span>
+    }
+}
 &nbsp;
   async getCommentCount(req: AuthRequest, res: Response) {
     try {
@@ -262,7 +274,7 @@ export default new CommentController();
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-03-15T15:42:19.685Z
+                at 2024-03-19T12:50:59.556Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

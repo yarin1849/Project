@@ -9,6 +9,8 @@ import userRoute from "./routes/user_route";
 import authRoute from "./routes/auth_route";
 import commentRoute from './routes/comment_route';
 import fileRoute from "./routes/file_route";
+import location_route from "./routes/location_route";
+//import cors from "cors";
 
 const initApp = (): Promise<Express> => {
   const promise = new Promise<Express>((resolve) => {
@@ -18,8 +20,8 @@ const initApp = (): Promise<Express> => {
     const url = process.env.DB_URL;
     mongoose.connect(url!).then(() => {
       const app = express();
-      app.use(bodyParser.json());
-      app.use(bodyParser.urlencoded({ extended: true }));
+      app.use(bodyParser.json({limit: "50mb"}));
+      app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
       app.use((req, res, next) => {
         res.header("Access-Control-Allow-Origin", "*");
         res.header("Access-Control-Allow-Methods", "*");
@@ -32,7 +34,9 @@ const initApp = (): Promise<Express> => {
       app.use("/auth", authRoute);
       app.use("/comments", commentRoute);
       app.use("/file", fileRoute);
+      app.use("/user-locations", location_route)
       app.use("/public", express.static("public"));
+      //app.use(cors())
       resolve(app);
     });
   });

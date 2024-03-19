@@ -7,8 +7,10 @@ const express_1 = __importDefault(require("express"));
 const router = express_1.default.Router();
 const comment_controller_1 = __importDefault(require("../controllers/comment_controller"));
 const auth_middleware_1 = __importDefault(require("../common/auth_middleware"));
-router.get("/:id", auth_middleware_1.default, comment_controller_1.default.getById.bind(comment_controller_1.default));
+router.get("/", comment_controller_1.default.get.bind(comment_controller_1.default));
+router.get("/:id", comment_controller_1.default.getById.bind(comment_controller_1.default));
 router.post("/", auth_middleware_1.default, comment_controller_1.default.post.bind(comment_controller_1.default));
 router.get('/count/:id', comment_controller_1.default.getCommentCount);
+router.get('/post/:postId', comment_controller_1.default.getCommentsByPostId.bind(comment_controller_1.default));
 exports.default = router;
 //# sourceMappingURL=comment_route.js.map

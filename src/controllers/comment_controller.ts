@@ -8,19 +8,11 @@ class CommentController extends BaseController<IComment> {
   constructor() {
     super(Comment);
   }
-  // async getById(req: AuthRequest, res: Response) {
-  //   try {
-      
-  //     const obj = await this.model.findById(req.params.id);
-  //     res.send(obj);
-  //   } catch (err) {
-  //     res.status(500).json({ message: err.message });
-  //   } 
-  // }
+  
   async post(req: AuthRequest, res: Response) {
     try {
       const userId = req.user._id;
-      const { content, postId } = req.body;
+      const { content, postId} = req.body;
 
       const postFind = await Post.findById(postId);
       if (!postFind) {
@@ -32,6 +24,7 @@ class CommentController extends BaseController<IComment> {
         content,
         owner: userId,
         postId: postFind.id,
+        createdAt: new Date(),
       });
       postFind.comments.push(comment.id);
 
@@ -41,6 +34,17 @@ class CommentController extends BaseController<IComment> {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
+
+  async getCommentsByPostId(req: AuthRequest, res: Response) {
+    try {
+        const postId = req.params.postId;
+        const comments = await Comment.find({ postId }).populate('owner');
+        res.status(200).json(comments);
+    } catch (error) {
+        console.error("Error fetching comments by post ID:", error);
+        res.status(500).json({ message: "Failed to fetch comments by post ID" });
+    }
+}
 
   async getCommentCount(req: AuthRequest, res: Response) {
     try {

@@ -21,7 +21,8 @@ const PostSchema = new mongoose_1.default.Schema({
         required: true,
     },
     owner: {
-        type: String,
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: 'User',
         required: true,
     },
     // comments: {
