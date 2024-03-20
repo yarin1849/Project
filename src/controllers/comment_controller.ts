@@ -52,15 +52,13 @@ class CommentController extends BaseController<IComment> {
         console.log("Post ID:", postId);
         const commentCount = await Comment.countDocuments({ postId });
         console.log("Comment count:", commentCount);
+
         res.send({ count: commentCount });
     } catch (err) {
         console.error("Error:", err.message);
         res.status(500).json({ message: err.message });
     }
 }
-
-
-
 }
 
 
