@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.42% </span>
+                <span class="strong">90.47% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>15/21</span>
+                <span class='fraction'>19/21</span>
             </div>
         
             
@@ -37,16 +37,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/5</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">71.42% </span>
+                <span class="strong">90.47% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>15/21</span>
+                <span class='fraction'>19/21</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line medium'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -130,14 +130,7 @@
 <a name='L65'></a><a href='#L65'>65</a>
 <a name='L66'></a><a href='#L66'>66</a>
 <a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a>
-<a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a>
-<a name='L75'></a><a href='#L75'>75</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">5x</span>
+<a name='L68'></a><a href='#L68'>68</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -171,19 +164,12 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -244,43 +230,36 @@ class PostController extends BaseController&lt;IPost&gt; {
         console.log("Put Post by Id:" + req.params.id);
         super.putById(req, res);
     }
-<span class="fstat-no" title="function not covered" >    async </span>getByUserId(req: AuthRequest, res: Response) {
-<span class="cstat-no" title="statement not covered" >      try {</span>
-        const userId = <span class="cstat-no" title="statement not covered" >req.query.userId;</span>
-        const obj = <span class="cstat-no" title="statement not covered" >await this.model.find({owner : userId});</span>
-<span class="cstat-no" title="statement not covered" >        res.status(200).json(obj);</span>
+    async getByUserId(req: AuthRequest, res: Response) {
+      try {
+        const userId = req.query.userId;
+        const obj = await this.model.find({owner : userId});
+        res.status(200).json(obj);
       } catch (err) {
 <span class="cstat-no" title="statement not covered" >        res.status(406).send("fail: " + err.message);</span>
       }
     }
-//     async getByConnectedUser(req: AuthRequest, res: Response) {
-//       console.log("Get Review by User Id:");
+    // async getById(req: AuthRequest, res: Response) {
+    //   console.log("Get Post by Id:" + req.params.id);
+    //   try {
+    //     const p = await Post.findById(req.params.id)
+    //       .populate([{ path: "owner", select: "name imgUrl" }])
+    //       .populate({
+    //         path: "comments",
+    //         select: "message title owner postId",
+    //         populate: { path: "owner", select: "name imgUrl" },
+    //       });
+    //     if (!p) {
+    //       res.status(404).json({ message: "Post not found" });
+    //     }
+    //     console.log(p);
+    //     res.status(201).send(p);
+    //   } catch (error) {
+    //     console.error(error);
+    //     res.status(500).json({ message: error.message });
+    //   }
+    // }
   
-//       const userId = req.user._id;
-//       console.log(userId);
-//       if (userId == null) return res.sendStatus(401);
-  
-//       try {
-//         const reviews = await Post.find({ owner: userId })
-//           .select([
-//             "title",
-//             "message",
-//             "postImg",
-//             "comments",  
-//           ])
-//           .populate([{ path: "owner", select: "name postImg" }]);
-//         const detailedReviews = reviews
-//           .map((review) =&gt; review.toObject())
-//           .map(({ _id, ...review }) =&gt; ({
-//             ...review,
-//             id: _id,
-//           }));
-  
-//         res.send(detailedReviews);
-//       } catch (err) {
-//         res.status(500).json({ message: err.message });
-//       }
-//     }
     
 }
 &nbsp;
@@ -292,7 +271,7 @@ export default new PostController();
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-03-19T12:50:59.556Z
+                at 2024-03-19T18:24:52.821Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

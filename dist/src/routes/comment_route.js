@@ -11,6 +11,6 @@ router.get("/", comment_controller_1.default.get.bind(comment_controller_1.defau
 router.get("/:id", comment_controller_1.default.getById.bind(comment_controller_1.default));
 router.post("/", auth_middleware_1.default, comment_controller_1.default.post.bind(comment_controller_1.default));
 router.get('/count/:id', comment_controller_1.default.getCommentCount);
-router.get('/post/:postId', comment_controller_1.default.getCommentsByPostId.bind(comment_controller_1.default));
+//router.get('/post/:postId', CommentController.getCommentsByPostId.bind(CommentController));
 exports.default = router;
 //# sourceMappingURL=comment_route.js.map

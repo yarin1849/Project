@@ -19,12 +19,18 @@ const user = {
 const post = {
     title: "Test Post",
     message: "Test Description",
-    postImg: "https://www.google.com",
+    postImg: "http://localhost:3000/public\\1710857871652.jpg",
     comments: [],
     owner: user._id,
 };
 const comment = {
     content: "test description",
+    owner: user._id,
+    postId: post._id,
+    createdAt: new Date(),
+};
+const comment2 = {
+    content: "second comment",
     owner: user._id,
     postId: post._id,
     createdAt: new Date(),
@@ -52,8 +58,14 @@ beforeAll(async () => {
         .set("Authorization", "JWT " + accessToken)
         .send(comment);
     const commentId = commentResponse.body._id;
+    const commentResponse2 = await (0, supertest_1.default)(app)
+        .post("/comments")
+        .set("Authorization", "JWT " + accessToken)
+        .send(comment2);
+    const commentId2 = commentResponse2.body._id;
     console.log("commentId", commentId);
     post.comments.push(commentId);
+    post.comments.push(commentId2);
 });
 afterAll(async () => {
     await mongoose_1.default.connection.close();

@@ -69,7 +69,6 @@ router.get("/", PostController.get.bind(PostController));
 router.get("/:id", PostController.getById.bind(PostController));
 
 router.get("/userId/:id",PostController.getByUserId.bind(PostController));
-//router.get("/connectedUser",authMiddleware, PostController.getByConnectedUser.bind(PostController));
 
 /**
 * @swagger

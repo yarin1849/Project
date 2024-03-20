@@ -19,13 +19,19 @@ const user: IUser = {
 const post: IPost = {
   title: "Test Post",
   message: "Test Description",
-  postImg: "https://www.google.com",
+  postImg: "http://localhost:3000/public\\1710857871652.jpg",
   comments: [],
   owner: user._id,
 };
 
 const comment: IComment = {
   content: "test description",
+  owner: user._id,
+  postId: post._id,
+  createdAt: new Date(),
+};
+const comment2: IComment = {
+  content: "second comment",
   owner: user._id,
   postId: post._id,
   createdAt: new Date(),
@@ -57,8 +63,16 @@ beforeAll(async () => {
     .set("Authorization", "JWT " + accessToken)
     .send(comment);
   const commentId = commentResponse.body._id;
+  const commentResponse2 = await request(app)
+    .post("/comments")
+    .set("Authorization", "JWT " + accessToken)
+    .send(comment2);
+  const commentId2 = commentResponse2.body._id;
+
   console.log("commentId", commentId);
   post.comments.push(commentId);
+  post.comments.push(commentId2);
+
 });
 
 

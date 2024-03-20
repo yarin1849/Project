@@ -40,34 +40,27 @@ class PostController extends BaseController<IPost> {
         res.status(406).send("fail: " + err.message);
       }
     }
-//     async getByConnectedUser(req: AuthRequest, res: Response) {
-//       console.log("Get Review by User Id:");
+    async getById(req: AuthRequest, res: Response) {
+      console.log("Get Post by Id:" + req.params.id);
+      try {
+        const p = await Post.findById(req.params.id)
+          .populate([{ path: "owner", select: "name imgUrl" }])
+          .populate({
+            path: "comments",
+            select: "message title owner postId",
+            populate: { path: "owner", select: "name imgUrl" },
+          });
+        if (!p) {
+          res.status(404).json({ message: "Post not found" });
+        }
+        console.log(p);
+        res.status(201).send(p);
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: error.message });
+      }
+    }
   
-//       const userId = req.user._id;
-//       console.log(userId);
-//       if (userId == null) return res.sendStatus(401);
-  
-//       try {
-//         const reviews = await Post.find({ owner: userId })
-//           .select([
-//             "title",
-//             "message",
-//             "postImg",
-//             "comments",  
-//           ])
-//           .populate([{ path: "owner", select: "name postImg" }]);
-//         const detailedReviews = reviews
-//           .map((review) => review.toObject())
-//           .map(({ _id, ...review }) => ({
-//             ...review,
-//             id: _id,
-//           }));
-  
-//         res.send(detailedReviews);
-//       } catch (err) {
-//         res.status(500).json({ message: err.message });
-//       }
-//     }
     
 }
 

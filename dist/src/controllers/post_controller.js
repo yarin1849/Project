@@ -40,6 +40,27 @@ class PostController extends base_controller_1.BaseController {
             res.status(406).send("fail: " + err.message);
         }
     }
+    async getById(req, res) {
+        console.log("Get Post by Id:" + req.params.id);
+        try {
+            const p = await post_model_1.default.findById(req.params.id)
+                .populate([{ path: "owner", select: "name imgUrl" }])
+                .populate({
+                path: "comments",
+                select: "message title owner postId",
+                populate: { path: "owner", select: "name imgUrl" },
+            });
+            if (!p) {
+                res.status(404).json({ message: "Post not found" });
+            }
+            console.log(p);
+            res.status(201).send(p);
+        }
+        catch (error) {
+            console.error(error);
+            res.status(500).json({ message: error.message });
+        }
+    }
 }
 exports.default = new PostController();
 //# sourceMappingURL=post_controller.js.map

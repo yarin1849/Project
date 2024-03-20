@@ -12,7 +12,7 @@ class CommentController extends BaseController<IComment> {
   async post(req: AuthRequest, res: Response) {
     try {
       const userId = req.user._id;
-      const { content, postId} = req.body;
+      const { content , postId} = req.body;
 
       const postFind = await Post.findById(postId);
       if (!postFind) {
@@ -35,16 +35,16 @@ class CommentController extends BaseController<IComment> {
     }
   }
 
-  async getCommentsByPostId(req: AuthRequest, res: Response) {
-    try {
-        const postId = req.params.postId;
-        const comments = await Comment.find({ postId }).populate('owner');
-        res.status(200).json(comments);
-    } catch (error) {
-        console.error("Error fetching comments by post ID:", error);
-        res.status(500).json({ message: "Failed to fetch comments by post ID" });
-    }
-}
+//   async getCommentsByPostId(req: AuthRequest, res: Response) {
+//     try {
+//         const postId = req.params.postId;
+//         const comments = await Comment.find({ postId }).populate('owner');
+//         res.status(200).json(comments);
+//     } catch (error) {
+//         console.error("Error fetching comments by post ID:", error);
+//         res.status(500).json({ message: "Failed to fetch comments by post ID" });
+//     }
+// }
 
   async getCommentCount(req: AuthRequest, res: Response) {
     try {
