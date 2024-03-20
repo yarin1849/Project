@@ -86,7 +86,6 @@ describe("Post comment test", () => {
         console.log("comment", comment);
     });
     test("Test posting a comment to a non-existent post", async () => {
-        // Create a comment object with a postId that does not exist
         const invalidComment = {
             content: "test description",
             owner: user._id,

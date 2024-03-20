@@ -17,7 +17,8 @@ beforeAll(async () => {
   user = {
     name: "Joe 123",
     email: "abc@test.com",
-    password: "A00000000"
+    password: "A00000000",
+    _id: Object('123456789')
   };
   await request(app).post("/auth/register").send(user);
   const response = await request(app).post("/auth/login").send(user);
@@ -53,6 +54,7 @@ describe("Users tests", () => {
     expect(response.body.name).toBe(newUser.name);
     expect(response.body.email).toBe(newUser.email);
   });
+  
 
   test("Test POST /user with invalid data", async () => {
     const invalidUser: IUser = {
@@ -93,7 +95,16 @@ describe("Users tests", () => {
     expect(response.statusCode).toBe(500);
   });
 
-  
+  test("Test Get current user", async () => {
+    const response = await request(app)
+      .get("/user")
+      .set("Authorization", "JWT " + accessToken);
+    expect(response.statusCode).toBe(200);
+    expect(response.body.name).toBe(user.name);
+    expect(response.body.email).toBe(user.email);
+  });
+
+
 });
 
 

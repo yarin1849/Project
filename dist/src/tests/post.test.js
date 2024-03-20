@@ -43,31 +43,31 @@ afterAll(async () => {
     await mongoose_1.default.connection.close();
 });
 const post = {
-    title: "My visit to Tiberias",
-    message: "my fisrt description of posts bla bla eksdf bsakd mewkfm ",
+    title: "Tiberias in a Post",
+    message: "Tiberias is a city in northern Israel, situated on the western shore of the Sea of Galilee. Today, Tiberias is a popular destination for tourists seeking to explore its ancient ruins, hot springs, and religious sites.",
     comments: [],
-    postImg: "http://localhost:3000/public\\1710518049669.jpg",
+    postImg: "http://localhost:3000/public\\1710970869451.jpg",
 };
 const post2 = {
-    title: "Best- Jerusalem22",
+    title: "First Visit to - Jerusalem - ",
     message: "Visitors can explore the narrow streets of the Jewish, Christian, Armenian, and Muslim quarters, soak in the vibrant atmosphere of the markets, and immerse themselves in the city's profound religious and historical significance.",
     owner: user._id,
     comments: [],
-    postImg: "http://localhost:3000/public\\1710857686878.jpg",
+    postImg: "http://localhost:3000/public\\1710970775153.jpg",
 };
-// post2.comments.push({
-//   _id: user._id, 
-//   owner: user._id, 
-//   content: "This is a great post!",
-//   postId: post2._id, 
-//   createdAt: new Date() 
-// });
 const post3 = {
-    title: "Best- Tel aviv2",
-    message: "Visitors can explore the narrow streets of the Jewish, Christian, Armenian, and Muslim quarters, soak in the vibrant atmosphere of the markets, and immerse themselves in the city's profound religious and historical significance.",
+    title: "Tel Aviv",
+    message: "Israel's dynamic coastal city, renowned for its nightlife, beaches, and innovation.",
     owner: user._id,
     comments: [],
-    postImg: "http://localhost:3000/public\\1710857871652.jpg",
+    postImg: "http://localhost:3000/public\\1710966473154.jpg",
+};
+const post4 = {
+    title: "The Dead Sea",
+    message: "bordered by Jordan and Israel, is famed for its extreme saltiness and therapeutic mud. Its historic sites and rugged desert backdrop add to its allure.",
+    owner: user._id,
+    comments: [],
+    postImg: "http://localhost:3000/public\\1710966496384.jpg",
 };
 describe("Post tests", () => {
     const addPost = async (post) => {
@@ -83,8 +83,8 @@ describe("Post tests", () => {
     test("Test post", async () => {
         await addPost(post);
     });
-    test("Test post2", async () => {
-        await addPost(post2);
+    test("Test post", async () => {
+        await addPost(post4);
     });
     test("Test post2", async () => {
         const post2Response = await (0, supertest_1.default)(app)
@@ -103,11 +103,9 @@ describe("Post tests", () => {
         newComment.save()
             .then(savedComment => {
             console.log("Comment saved:", savedComment);
-            // Handle success
         })
             .catch(error => {
             console.error("Error saving comment:", error);
-            // Handle error
         });
         createdPost2.comments.push(newComment);
         const updatePostResponse = await (0, supertest_1.default)(app)
@@ -172,10 +170,9 @@ describe("Post tests", () => {
         expect(response.body.message).toBeDefined();
     });
     test("Test Update Post", async () => {
-        const createdPost = await post_model_1.default.findOne({ title: "My visit to Tiberias" });
+        const createdPost = await post_model_1.default.findOne({ title: "Tiberias in a Post" });
         const postId = createdPost === null || createdPost === void 0 ? void 0 : createdPost._id;
-        // Update the title of the post
-        const updatedTitle = "Updated Title";
+        const updatedTitle = "Tiberias the Sea of Galilee City!";
         const response = await (0, supertest_1.default)(app)
             .put(`/userpost/${postId}`)
             .set("Authorization", "JWT " + accessToken)

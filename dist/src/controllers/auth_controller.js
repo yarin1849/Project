@@ -191,11 +191,11 @@ const refresh = async (req, res) => {
             });
             return res.status(200).send({
                 'accessToken': accessToken,
-                'refreshToken': newRefreshToken // Use the new refresh token here
+                'refreshToken': newRefreshToken
             });
         }
         catch (err) {
-            return res.status(401).send(err.message); // Return the error response properly
+            return res.status(401).send(err.message);
         }
     });
 };

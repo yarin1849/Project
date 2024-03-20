@@ -18,7 +18,8 @@ beforeAll(async () => {
     user = {
         name: "Joe 123",
         email: "abc@test.com",
-        password: "A00000000"
+        password: "A00000000",
+        _id: Object('123456789')
     };
     await (0, supertest_1.default)(app).post("/auth/register").send(user);
     const response = await (0, supertest_1.default)(app).post("/auth/login").send(user);
@@ -85,6 +86,14 @@ describe("Users tests", () => {
             .put("/user/invalid_id")
             .set("Authorization", "JWT " + accessToken);
         expect(response.statusCode).toBe(500);
+    });
+    test("Test Get current user", async () => {
+        const response = await (0, supertest_1.default)(app)
+            .get("/user")
+            .set("Authorization", "JWT " + accessToken);
+        expect(response.statusCode).toBe(200);
+        expect(response.body.name).toBe(user.name);
+        expect(response.body.email).toBe(user.email);
     });
 });
 // import request from "supertest";

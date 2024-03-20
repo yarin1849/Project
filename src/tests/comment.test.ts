@@ -91,14 +91,14 @@ describe("Post comment test", () => {
       expect(response.body.content).toBe(comment.content);
       expect(response.body.postId).toBe(post._id.toString());
   };
-
+ 
   test("Test post", async () => {
     await addComment(comment);
     console.log("comment", comment);
   });
+  
 
   test("Test posting a comment to a non-existent post", async () => {
-    // Create a comment object with a postId that does not exist
     const invalidComment: IComment = {
       content: "test description",
       owner: user._id,
