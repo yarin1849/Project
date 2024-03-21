@@ -74,7 +74,7 @@ describe("Users tests", () => {
     const response = await request(app)
       .post("/user")
       .send(user);
-      //UnAothorized - no token
+      // no token
     expect(response.statusCode).toBe(401);
   });
   

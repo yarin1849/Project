@@ -162,28 +162,5 @@ describe("Post comment test", () => {
     expect(response.statusCode).toBe(200);
   });
   
-//   test("Test format of returned comments", async () => {
-//         await addComment(comment);
-
-//     const response = await request(app)
-//       .get(`/comments/${post._id}`)
-//       .set("Authorization", "JWT " + accessToken)
-//       .expect(200)
-// //      .expect("Content-Type", /json/);
-  
-//     console.log("Response body:", response.body);
-  
-//     // Ensure that the comments field is populated
-//     expect(response.body.comments.length).toBeGreaterThan(0);
-  
-//     response.body.comments.forEach((comment) => {
-//       expect(comment).toHaveProperty("content");
-//       expect(comment).toHaveProperty("owner");
-//       expect(comment).toHaveProperty("createdAt");
-//       expect(comment).toHaveProperty("postId");
-//     });
-//   });
-  
-  
 });
 

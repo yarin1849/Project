@@ -163,7 +163,7 @@ describe("Auth tests", () => {
     
 });
 describe("Google Login API", () => {
-  it("should return 200 with access and refresh tokens for Google login", async () => {
+  it("Access and refresh tokens for Google login", async () => {
     const mockRes = {
       status: jest.fn(() => mockRes),
       send: jest.fn(),
@@ -175,13 +175,11 @@ describe("Google Login API", () => {
       picture: "http://kareengoogle.png",
     };
 
-    // Mock verifyIdToken function of OAuth2Client
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (OAuth2Client.prototype.verifyIdToken as any).mockResolvedValue({
       getPayload: () => mockGoogleUser,
     });
 
-    // Send a request to the Google login endpoint
     const response = await request(app)
       .post("/auth/google")
       .send({ credentialResponse: { credential: "mockedGoogleCredential" } });
@@ -195,7 +193,7 @@ describe("Google Login API", () => {
     await User.deleteMany({ email: mockGoogleUser.email });
   });
 
-  it("should return 401 for invalid Google credential", async () => {
+  it("Invalid Google credential", async () => {
     const mockRes = {
       status: jest.fn(() => mockRes),
       send: jest.fn(),
