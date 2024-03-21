@@ -138,6 +138,7 @@ router.post("/login", auth_controller_1.default.login);
 *         description: logout completed successfully
 */
 router.get("/logout", auth_controller_1.default.logout);
+router.post("/logout", auth_controller_1.default.logout);
 /**
 * @swagger
 * /auth/refresh:

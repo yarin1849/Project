@@ -127,7 +127,7 @@ const login = async (req: Request, res: Response) => {
         }
         const match = await bcrypt.compare(password, user.password);
         if (!match) {
-            return res.status(401).send("email or password incorrect");
+            return res.status(401).send("password incorrect");
         }
 
         const tokens = await generateTokens(user)
@@ -150,7 +150,7 @@ const logout = async (req: Request, res: Response) => {
     const refreshToken = authHeader && authHeader.split(' ')[1]; // Bearer <token>
     if (refreshToken == null) return res.sendStatus(401);
     jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user: { '_id': string }) => {
-        console.log(err);
+       // console.log(err);
         if (err) return res.sendStatus(401);
         try {
             const userDb = await User.findOne({ '_id': user._id });
@@ -161,10 +161,10 @@ const logout = async (req: Request, res: Response) => {
             } else {
                 userDb.refreshTokens = userDb.refreshTokens.filter(t => t !== refreshToken);
                 await userDb.save();
-                return res.sendStatus(200);
+                return res.sendStatus(200).send("Logout successful");
             }
         } catch (err) {
-            res.status(400).send(err.message);
+            res.status(500).send(err.message);
         }
     });
 }

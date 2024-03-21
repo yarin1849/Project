@@ -17,11 +17,11 @@ const user: IUser = {
 };
 
 const post: IPost = {
-  title: "Test Post",
-  message: "Test Description",
-  postImg: "http://localhost:3000/public\\1710857871652.jpg",
-  comments: [],
+  title: "Holly Nazareth..",
+  message: "As the childhood home of Jesus, Nazareth holds immense significance for Christians and is a popular destination for religious pilgrims.",
   owner: user._id,
+  comments: [],
+  postImg: "http://localhost:3000/public\\1711015521893.jpg",
 };
 
 const comment: IComment = {
@@ -51,11 +51,15 @@ beforeAll(async () => {
   user._id = postedUser.id;
   post.owner = postedUser.id;
   comment.owner = postedUser.id;
-  
+
+  comment2.owner = postedUser.id;
+
   // Create the post
   const postedReview = await Post.create(post);
   post._id = postedReview._id;
   comment.postId = postedReview._id;
+
+  comment2.postId = postedReview._id;
 
   // Add a comment to the post
   const commentResponse = await request(app)
@@ -92,9 +96,14 @@ describe("Post comment test", () => {
       expect(response.body.postId).toBe(post._id.toString());
   };
  
-  test("Test post", async () => {
+  test("Test Add Comment", async () => {
     await addComment(comment);
     console.log("comment", comment);
+  });
+  
+  test("Test Add Comment2", async () => {
+    await addComment(comment2);
+    console.log("comment", comment2);
   });
   
 

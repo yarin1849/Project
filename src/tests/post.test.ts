@@ -175,16 +175,12 @@ test("Get post by ID", async () => {
   expect(postResponse.statusCode).toBe(201);
   const postId = postResponse.body._id;
 
-  // get post by ID
   const getByIdResponse = await request(app).get(`/userpost/userId/${postId}`);
   expect(getByIdResponse.statusCode).toBe(200);
-  // expect(getByIdResponse.body.title).toBe(post.title);
-  // expect(getByIdResponse.body.message).toBe(post.message);
 });
 
 
 test("Catch error in get method", async () => {
-  // Simulate an error by passing an invalid query parameter
   const response = await request(app).get("/userpost/invalid-endpoint");
   expect(response.statusCode).toBe(500);
   expect(response.body.message).toBeDefined();

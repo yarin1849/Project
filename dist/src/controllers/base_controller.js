@@ -7,14 +7,8 @@ class BaseController {
     }
     async get(req, res) {
         try {
-            if (req.query.name) {
-                const object = await this.model.find({ name: req.query.name });
-                res.send(object);
-            }
-            else {
-                const objects = await this.model.find();
-                res.send(objects);
-            }
+            const objects = await this.model.find();
+            res.send(objects);
         }
         catch (err) {
             res.status(500).json({ message: err.message });

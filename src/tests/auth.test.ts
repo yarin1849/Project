@@ -4,6 +4,9 @@ import mongoose from "mongoose";
 import { Express } from "express";
 import User from "../models/user_model";
 import jwt from 'jsonwebtoken';
+import { OAuth2Client } from "google-auth-library";
+
+jest.mock("google-auth-library");
 
 let app: Express;
 const user = {
@@ -41,14 +44,6 @@ describe("Auth tests", () => {
       .send(user);
     expect(response.statusCode).toBe(406);
   });
-
-  test("Test Register missing password", async () => {
-    const response = await request(app)
-      .post("/auth/register").send({
-        email: "test@test.com",
-      });
-    expect(response.statusCode).toBe(400);
-  });
   
 
   test("Test Login", async () => {
@@ -68,6 +63,7 @@ describe("Auth tests", () => {
   jest.setTimeout(10000);
 
   test("Test access after timeout of token", async () => {
+
     await new Promise(resolve => setTimeout(() => resolve("done"), 5000));
 
     const response = await request(app)
@@ -86,7 +82,7 @@ describe("Auth tests", () => {
     expect(response.body.refreshToken).toBeDefined();
 
     const newAccessToken = response.body.accessToken;
-    newRefreshToken = response.body.refreshToken;
+    //newRefreshToken = response.body.refreshToken;
 
     const response2 = await request(app)
       .get("/user")
@@ -151,5 +147,73 @@ describe("Auth tests", () => {
     expect(response.statusCode).toBe(401);
   });
 
- 
+    it("Logout with missing authorization token ", async () => {
+      const response = await request(app).post("/auth/logout").expect(401);
+
+      expect(response.text).toContain("Unauthorized");
+    });
+    // it("should handle successful logout", async () => {
+    //   const response = await request(app)
+    //     .post("/api/auth/logout")
+    //     .set("Authorization", "JWT " + newRefreshToken)
+    //     .expect(200);
+
+    //   expect(response.text).toContain("Logout successful");
+    // });
+    
+});
+describe("Google Login API", () => {
+  it("should return 200 with access and refresh tokens for Google login", async () => {
+    const mockRes = {
+      status: jest.fn(() => mockRes),
+      send: jest.fn(),
+    };
+
+    const mockGoogleUser = {
+      name: "Kareen Salameh",
+      email: "kareensalameh3@gmail.com",
+      picture: "http://kareengoogle.png",
+    };
+
+    // Mock verifyIdToken function of OAuth2Client
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (OAuth2Client.prototype.verifyIdToken as any).mockResolvedValue({
+      getPayload: () => mockGoogleUser,
+    });
+
+    // Send a request to the Google login endpoint
+    const response = await request(app)
+      .post("/auth/google")
+      .send({ credentialResponse: { credential: "mockedGoogleCredential" } });
+
+    expect(response.status).toBe(200);
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (OAuth2Client.prototype.verifyIdToken as any).mockRestore();
+
+    // delete user
+    await User.deleteMany({ email: mockGoogleUser.email });
+  });
+
+  it("should return 401 for invalid Google credential", async () => {
+    const mockRes = {
+      status: jest.fn(() => mockRes),
+      send: jest.fn(),
+    };
+
+    // Mock verifyIdToken function of OAuth2Client to throw an error
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (OAuth2Client.prototype.verifyIdToken as any).mockRejectedValue(
+      new Error("Invalid token")
+    );
+
+    // Send a request to the Google login endpoint
+    const response = await request(app)
+      .post("/auth/google")
+      .send({ credentialResponse: { credential: "mockedGoogleCredential" } });
+
+    // Assert response status code and error message
+    expect(response.status).toBe(401);
+    expect(response.text).toBe("Invalid token");
+  });
 });

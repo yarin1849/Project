@@ -115,7 +115,7 @@ const login = async (req, res) => {
         }
         const match = await bcrypt_1.default.compare(password, user.password);
         if (!match) {
-            return res.status(401).send("email or password incorrect");
+            return res.status(401).send("password incorrect");
         }
         const tokens = await generateTokens(user);
         res.cookie("refresh", tokens.refreshToken, {
@@ -138,7 +138,7 @@ const logout = async (req, res) => {
     if (refreshToken == null)
         return res.sendStatus(401);
     jsonwebtoken_1.default.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err, user) => {
-        console.log(err);
+        // console.log(err);
         if (err)
             return res.sendStatus(401);
         try {
@@ -151,11 +151,11 @@ const logout = async (req, res) => {
             else {
                 userDb.refreshTokens = userDb.refreshTokens.filter(t => t !== refreshToken);
                 await userDb.save();
-                return res.sendStatus(200);
+                return res.sendStatus(200).send("Logout successful");
             }
         }
         catch (err) {
-            res.status(400).send(err.message);
+            res.status(500).send(err.message);
         }
     });
 };

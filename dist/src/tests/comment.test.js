@@ -17,11 +17,11 @@ const user = {
     imgUrl: "https://www.google.com",
 };
 const post = {
-    title: "Test Post",
-    message: "Test Description",
-    postImg: "http://localhost:3000/public\\1710857871652.jpg",
-    comments: [],
+    title: "Holly Nazareth..",
+    message: "As the childhood home of Jesus, Nazareth holds immense significance for Christians and is a popular destination for religious pilgrims.",
     owner: user._id,
+    comments: [],
+    postImg: "http://localhost:3000/public\\1711015521893.jpg",
 };
 const comment = {
     content: "test description",
@@ -48,10 +48,12 @@ beforeAll(async () => {
     user._id = postedUser.id;
     post.owner = postedUser.id;
     comment.owner = postedUser.id;
+    comment2.owner = postedUser.id;
     // Create the post
     const postedReview = await post_model_1.default.create(post);
     post._id = postedReview._id;
     comment.postId = postedReview._id;
+    comment2.postId = postedReview._id;
     // Add a comment to the post
     const commentResponse = await (0, supertest_1.default)(app)
         .post("/comments")
@@ -81,9 +83,13 @@ describe("Post comment test", () => {
         expect(response.body.content).toBe(comment.content);
         expect(response.body.postId).toBe(post._id.toString());
     };
-    test("Test post", async () => {
+    test("Test Add Comment", async () => {
         await addComment(comment);
         console.log("comment", comment);
+    });
+    test("Test Add Comment2", async () => {
+        await addComment(comment2);
+        console.log("comment", comment2);
     });
     test("Test posting a comment to a non-existent post", async () => {
         const invalidComment = {
