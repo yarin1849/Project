@@ -54,7 +54,6 @@ export class BaseController<ModelType> {
   
 }
 
-
 const createController = <ModelType>(model: Model<ModelType>) => {
   return new BaseController<ModelType>(model);
 };
